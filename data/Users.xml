@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<users>
+    <user username="kecske">
+        <password>kecske</password>
+        <fullname>Mekk Elek</fullname>
+        <email>iaia@mail.com</email>
+        <country>Italy</country>
+    </user>
+</users>

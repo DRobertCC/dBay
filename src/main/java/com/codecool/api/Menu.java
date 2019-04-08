@@ -2,6 +2,7 @@ package com.codecool.api;
 
 
 import com.codecool.api.exeption.DbayException;
+import com.codecool.api.exeption.NotLoggedInException;
 
 public class Menu {
 
@@ -16,15 +17,15 @@ public class Menu {
         String[] options = {
                 "Register",
                 "Log in",
-                "List new Car",
-                "List new Motorcycle",
-                "Print registered user-list",
-                "Show cars",
-                "Show motorcycles",
+                "Show registered users",
+                "   Show cars",
+                "   Show motorcycles",
+                "   List new Car",
+                "   List new Motorcycle",
                 "Buy an item",
                 "Log out"};
 
-        printMenu("\n*** Welcome to dBay. The offline stuff marketplace. ***\n\n " + "           Main menu", options, "Exit program");
+        printMenu("\n*** Welcome to dBay. The offline stuff marketplace. ***\n\n " + "           Main menu           Current user: " + dbay.getActiveUser(), options, "Exit program");
     }
 
     public void printMenu(String title, String[] listOptions, String exitMessage) {
@@ -42,7 +43,7 @@ public class Menu {
         IO.printMessage(String.format("( %1s )  %-10s", "0", exitMessage));
     }
 
-    public void choose() {
+    public void choose() throws InterruptedException {
         int option = IO.readInteger("\nPlease enter a number", 0, 9);
         switch (option) {
             case 1:
@@ -58,6 +59,18 @@ public class Menu {
                 IO.enterToContinue();
                 break;
             case 3:
+                dbay.printUsers();
+                IO.enterToContinue();
+                break;
+            case 4:
+                dbay.printCars();
+                IO.enterToContinue();
+                break;
+            case 5:
+                dbay.printMotorCycles();
+                IO.enterToContinue();
+                break;
+            case 6:
                 try {
                     dbay.listNewCar();
                 } catch (DbayException e) {
@@ -65,7 +78,7 @@ public class Menu {
                 }
                 IO.enterToContinue();
                 break;
-            case 4:
+            case 7:
                 try {
                     dbay.listNewMotorCycle();
                 } catch (DbayException e) {
@@ -73,23 +86,7 @@ public class Menu {
                 }
                 IO.enterToContinue();
                 break;
-            case 5:
-                dbay.printUsers();
-                IO.enterToContinue();
-                break;
-            case 6:
-                dbay.printCars();
-                IO.enterToContinue();
-                break;
-            case 7:
-                dbay.printMotorCycles();
-                IO.enterToContinue();
-                break;
             case 8:
-                dbay.logOut();
-                IO.enterToContinue();
-                break;
-            case 9:
                 try {
                     dbay.buy(999);
                 } catch (DbayException e) {
@@ -97,11 +94,19 @@ public class Menu {
                 }
                 IO.enterToContinue();
                 break;
+            case 9:
+                try {
+                    dbay.logOut();
+                } catch (NotLoggedInException e) {
+                    System.err.println(e.getMessage());
+                }
+                IO.enterToContinue();
+                break;
             case 0:
+//                dbay.updateUserList();
 //                dbay.updateNextItemId();
 //                dbay.updateCars();
 //                dbay.updateMotorCycles();
-//                dbay.updateUserList();
                 IO.printMessage("See you later!");
                 System.exit(0);
                 break;

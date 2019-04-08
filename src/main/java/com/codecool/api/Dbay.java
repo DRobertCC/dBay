@@ -51,7 +51,7 @@ public class Dbay {
             for (User user : users) {
                 if (user.getUserName().toLowerCase().equals(userName.toLowerCase())) {
                     free = false;
-                    IO.printMessage("\n   This username is already registered. Choose another one.");
+                    IO.printMessage("   " + "\n   This username is already registered. Choose another one.");
                 }
             }
             if (free) {
@@ -69,7 +69,7 @@ public class Dbay {
         String country = IO.readString("Country of residence", "^[a-zA-Z0-9._]*", "Only the followings permitted: a-z A-Z space");
         User newUser = new User(userName, password, fullName, email, country);
         users.add(newUser);
-        IO.printMessage(newUser.getUserName() + " successfully registered.");
+        IO.printMessage("   " + newUser.getUserName() + " successfully registered.");
     }
 
 
@@ -78,12 +78,15 @@ public class Dbay {
         String userName = IO.readString("Username", "^[a-zA-Z0-9._]*", "Only the followings permitted: a-z A-Z 0-9 ._");
         String password = IO.readString("Password", "(?=.*[a-z]).{6,}", "At least 6 lowercase characters."); // "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}"
         for (User user : users) {
+
             if (user.getUserName().toLowerCase().equals(userName.toLowerCase()) && user.getPassword().equals(password)) {
                 activeUser = user;
-                IO.printMessage(userName + " successfully logged in.");
-            } else {
-                throw new NoSuchUserNamePasswordCombinationException("\n   Wrong username and/or password");
+                IO.printMessage("   " + userName + " successfully logged in.");
+                break;
             }
+        }
+        if (activeUser == null) {
+            throw new NoSuchUserNamePasswordCombinationException("\n   Wrong username and/or password");
         }
     }
 
@@ -104,7 +107,7 @@ public class Dbay {
             throw new AlreadyListedException("\n   We already have a car with the same details!");
         }
         cars.add(newCar);
-        IO.printMessage(newCar.name + " successfully added.");
+        IO.printMessage("   " + newCar.name + " successfully added.");
     }
 
     public void listNewMotorCycle() throws DbayException {
@@ -122,7 +125,7 @@ public class Dbay {
             throw new AlreadyListedException("\n   We already have a bike with the same details!");
         }
         motorCycles.add(newMotorCycle);
-        IO.printMessage(newMotorCycle.name + " successfully added.");
+        IO.printMessage("   " + newMotorCycle.name + " successfully added.");
     }
 
     public void buy(int itemId) throws DbayException {
@@ -131,7 +134,7 @@ public class Dbay {
         checkItem(itemId);
         checkNotBought(itemId);
         boughtItems.put(itemId, new ItemBoughtInfo(activeUser, LocalDateTime.now())); // Ha eddig eljutott, akkor vásárolhat.
-        IO.printMessage("Congratulations. You have bought this item.");
+        IO.printMessage("   " + "Congratulations. You have bought this item.");
 //        for (Item item : items) {
 //            if ( item.getId().equals(itemId) ) {
 //                ;
@@ -139,11 +142,13 @@ public class Dbay {
 //        }
     }
 
-    public void logOut() {
+    public void logOut() throws NotLoggedInException {
         if (activeUser != null) {
             if (IO.getConfirmation("logout")) {
                 activeUser = null;
-                IO.printMessage("You have logged out.");
+                IO.printMessage("   You have logged out.");
+            } else {
+                throw new NotLoggedInException("Nobody was logged in!");
             }
         }
     }
@@ -196,6 +201,7 @@ public class Dbay {
     public void updateCars() {
         XMLWriter.updateCarsInXML(cars, "data/Dbay.xml", lastSavedItemId);
     }
+
     public void updateMotorCycles() {
         XMLWriter.updateMotorCyclesInXML(motorCycles, "data/Dbay.xml", lastSavedItemId);
     }
@@ -204,7 +210,10 @@ public class Dbay {
         XMLWriter.updateNextItemIdInXML("data/Dbay.xml", nextItemId);
     }
 
-
-
-
+    public String getActiveUser() {
+        if (this.activeUser == null) {
+            return "-";
+        }
+        return this.activeUser.getUserName();
+    }
 }

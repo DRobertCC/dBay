@@ -2,7 +2,6 @@ package com.codecool.cmd;
 
 import com.codecool.api.Dbay;
 import com.codecool.api.Menu;
-import com.codecool.api.exeption.DbayException;
 
 
 public class Main {
@@ -11,11 +10,11 @@ public class Main {
     public static void main(String[] args) throws InterruptedException {
         Menu menu = new Menu();
 
-//        while (true) {
-//            menu.handleMenu();
-//            Thread.sleep(100);
-//            menu.choose();
-//        }
+        while (true) {
+            menu.handleMenu();
+            Thread.sleep(100);
+            menu.choose();
+        }
 
 
 //        try {
@@ -40,11 +39,11 @@ public class Main {
 //        dbay.registerNewUser();
 //        dbay.printUsers();
 //
-        try {
-            dbay.logIn();
-        } catch (DbayException e) {
-            System.err.println(e.getMessage());
-        }
+//        try {
+//            dbay.logIn();
+//        } catch (DbayException e) {
+//            System.err.println(e.getMessage());
+//        }
 //
 //        dbay.updateNextId(); // Car     4 │ Toyota Corolla                 │ COUPE         │ 1998 │  2.5 litres │   2   │  true │ €2590.0
 //        dbay.logOut(); // Ok

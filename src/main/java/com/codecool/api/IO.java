@@ -47,7 +47,8 @@ abstract class IO {
         System.out.println(message);
     }
 
-    static void enterToContinue() {
+    static void enterToContinue() throws InterruptedException {
+        Thread.sleep(100);
         System.err.println( "\nPress enter to continue..." );
         String input = reader.nextLine();
     }

@@ -26,19 +26,27 @@ abstract class IO {
     }
 
     static void printCars(List<Car> cars, Map<Integer, Dbay.ItemBoughtInfo> boughtItems) {
-        System.out.printf("\n%9s %-32s %-15s %4s %11s %9s %7s %7s\n", "  id", "  Name ", "  Body Type ", "  Year ", "  Engine ", "  Doors ", " Gearbox ", " Price ");
-        for (Car car : cars) {
-            if (!boughtItems.containsKey(car.getId())) {
-                System.out.println(car);
+        if (cars.isEmpty()) {
+            IO.printMessage("\n   Nothing for sale at the moment. Please check back later.");
+        } else {
+            System.out.printf("\n%9s %-32s %-15s %4s %11s %9s %7s %7s\n", "  id", "  Name ", "  Body Type ", "  Year ", "  Engine ", "  Doors ", " Gearbox ", " Price ");
+            for (Car car : cars) {
+                if (!boughtItems.containsKey(car.getId())) {
+                    System.out.println(car);
+                }
             }
         }
     }
 
     static void printMotorCycles(List<MotorCycle> motorCycles, Map<Integer, Dbay.ItemBoughtInfo> boughtItems) {
-        System.out.printf("\n%16s %-32s %-15s %4s %10s %10s\n", "  id", "  Name ", "  Type ", "  Year ", "  Engine ", " Price ");
-        for (MotorCycle motorCycle : motorCycles) {
-            if (!boughtItems.containsKey(motorCycle.getId())) {
-                System.out.println(motorCycle);
+        if (motorCycles.isEmpty()) {
+            IO.printMessage("\n   Nothing for sale at the moment. Please check back later.");
+        } else {
+            System.out.printf("\n%16s %-32s %-15s %4s %10s %10s\n", "  id", "  Name ", "  Type ", "  Year ", "  Engine ", " Price ");
+            for (MotorCycle motorCycle : motorCycles) {
+                if (!boughtItems.containsKey(motorCycle.getId())) {
+                    System.out.println(motorCycle);
+                }
             }
         }
     }
@@ -118,6 +126,11 @@ abstract class IO {
         return input == 1;
     }
 
+    static int chooseItemToBuy() {
+        int input = readInteger("\nWhat would like to do?\n   1 = Buy Car\n   2 = Buy Motorcycle\nChoose one", 1, 2);
+        return input;
+    }
+
     static TypeOfCarBody chooseTypeOfCarBody() {
         int i = 0;
         System.out.println("Available choices of body types: ");
@@ -126,7 +139,7 @@ abstract class IO {
             System.out.println(type);
         }
 
-        int input = readInteger("Choose the body type ", 1, 7);
+        int input = readInteger("Choose the body type", 1, 7);
 
         switch (input) {
             case 1:

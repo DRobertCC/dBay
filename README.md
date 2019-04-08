@@ -21,5 +21,5 @@ java -cp target/classes com.codecool.Main
 
 ## About
 
-This app was written by a Codecooler, Isti Győrfi from Miskolc.
+This app was written by a Codecooler, Róbert Dancsó from Miskolc.
 # dBay

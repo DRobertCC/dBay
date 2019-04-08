@@ -14,9 +14,9 @@ public class MotorCycle extends Vehicle {
         this.typeOfMotorCycle = typeOfMotorCycle;
     }
 
-    public static boolean contains(int id, List<MotorCycle> items) {
+    static boolean contains(int id, List<MotorCycle> items) {
         for (Item item : items) {
-            if (item.id == id) {
+            if (item.getId() == id) {
                 return true;
             }
         }
@@ -30,12 +30,12 @@ public class MotorCycle extends Vehicle {
     @Override
     public String toString() {
         return "MotorCycle " +
-                String.format("%5s", id) +
-                " │ " + String.format("%-30s", name) +
+                String.format("%5s", this.getId()) +
+                " │ " + String.format("%-30s", this.getName()) +
                 " │ " + String.format("%-13s", typeOfMotorCycle) +
-                " │ " + String.format("%4s", yearOfManufacture) +
-                " │ " + String.format("%10s", engineSize + " litres") +
-                " │ " + String.format("%7s", "€" + price);
+                " │ " + String.format("%4s", this.getYearOfManufacture()) +
+                " │ " + String.format("%10s", this.getEngineSize() + " litres") +
+                " │ " + String.format("%7s", "€" + this.getPrice());
     }
 
     @Override
@@ -44,17 +44,17 @@ public class MotorCycle extends Vehicle {
         if (o == null || getClass() != o.getClass()) return false;
         MotorCycle motorcycle = (MotorCycle) o;
         return Objects.equals(
-                name, motorcycle.name) &&
-                yearOfManufacture == motorcycle.yearOfManufacture &&
-                price == motorcycle.price &&
-                engineSize == motorcycle.engineSize &&
-                typeOfMotorCycle == motorcycle.typeOfMotorCycle &&
-                Objects.equals(listedBy, motorcycle.listedBy);
+                this.getName(), motorcycle.getName()) &&
+                this.getYearOfManufacture() == motorcycle.getYearOfManufacture() &&
+                this.getPrice() == motorcycle.getPrice() &&
+                this.getEngineSize() == motorcycle.getEngineSize() &&
+                typeOfMotorCycle == motorcycle.getTypeOfMotorCycle() &&
+                Objects.equals(this.getListedBy(), motorcycle.getListedBy());
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(name, yearOfManufacture, price, engineSize, typeOfMotorCycle, listedBy);
+        return Objects.hash( this.getName(), this.getYearOfManufacture(), this.getPrice(), this.getEngineSize(), this.getListedBy() );
     }
 }

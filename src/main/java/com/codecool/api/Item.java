@@ -1,11 +1,11 @@
 package com.codecool.api;
 
-public abstract class Item {
+abstract class Item {
 
-    int id;
-    String name;
-    double price;
-    String listedBy; // The username of the lister;
+    private int id;
+    private String name;
+    private double price;
+    private String listedBy; // The username of the lister;
 
 
     Item(int id, String name, double price, String listedBy) {
@@ -15,23 +15,20 @@ public abstract class Item {
         this.listedBy = listedBy;
     }
 
-    Item() {
-    }
-
-    public int getId() {
+    int getId() {
         return id;
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
-    public double getPrice() {
+    double getPrice() {
         return price;
     }
 
 
-    public String getListedBy() {
+    String getListedBy() {
         return listedBy;
     }
 }

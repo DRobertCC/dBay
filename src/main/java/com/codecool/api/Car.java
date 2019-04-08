@@ -20,7 +20,7 @@ public class Car extends Vehicle{
 
     static boolean contains(int id, List<Car> items) {
         for (Item item : items) {
-            if (item.id == id) {
+            if (item.getId() == id) {
                 return true;
             }
         }
@@ -35,9 +35,9 @@ public class Car extends Vehicle{
         return typeOfCarBody;
     }
 
-//    public boolean isManual() {
-//        return isManual;
-//    }
+    private boolean getIsManual() {
+        return isManual;
+    }
 
     @Override
     public String toString() {
@@ -48,14 +48,14 @@ public class Car extends Vehicle{
             gearbox = "Auto";
         }
         return "Car " +
-                String.format("%5s", id) +
-                " │ " + String.format("%-30s", name) +
+                String.format("%5s", this.getId()) +
+                " │ " + String.format("%-30s", this.getName()) +
                 " │ " + String.format("%-13s", typeOfCarBody) +
-                " │ " + String.format("%4s", yearOfManufacture) +
-                " │ " + String.format("%11s", engineSize + " litres") +
+                " │ " + String.format("%4s", this.getYearOfManufacture()) +
+                " │ " + String.format("%11s", this.getEngineSize() + " litres") +
                 " │  " + String.format("%2s", numberOfDoors) +
                 "   │ " + String.format("%-7s", gearbox) +
-                " │ " + String.format("%7s", "€" + price);
+                " │ " + String.format("%7s", "€" + this.getPrice());
     }
 
     @Override
@@ -64,19 +64,19 @@ public class Car extends Vehicle{
         if (o == null || getClass() != o.getClass()) return false;
         Car car = (Car) o;
         return Objects.equals(
-                name, car.name) &&
-                yearOfManufacture == car.yearOfManufacture &&
-                price == car.price &&
-                engineSize == car.engineSize &&
-                numberOfDoors == car.numberOfDoors &&
+                this.getName(), car.getName()) &&
+                this.getYearOfManufacture() == car.getYearOfManufacture() &&
+                this.getPrice() == car.getPrice() &&
+                this.getEngineSize() == car.getEngineSize() &&
+                numberOfDoors == car.getNumberOfDoors() &&
                 typeOfCarBody == car.typeOfCarBody &&
-                isManual == car.isManual &&
-                Objects.equals(listedBy, car.listedBy);
+                isManual == car.getIsManual() &&
+                Objects.equals(this.getListedBy(), car.getListedBy());
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(name, yearOfManufacture, price, engineSize, numberOfDoors, typeOfCarBody, isManual, listedBy);
+        return Objects.hash( this.getName(), this.getYearOfManufacture(), this.getPrice(), this.getEngineSize(), this.getNumberOfDoors(), typeOfCarBody, isManual, this.getListedBy() );
     }
 }

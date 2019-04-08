@@ -26,7 +26,7 @@ abstract class XMLWriter extends XMLParser {
 
         boolean areThereNewItems = false;
         for (Car car : cars) {
-            if (car.id > lastSavedItemId) {
+            if (car.getId() > lastSavedItemId) {
                 areThereNewItems = true;
 
                 Element newCar = doc.createElement("Car");

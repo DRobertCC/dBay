@@ -106,7 +106,7 @@ public class Menu {
                 if (IO.getConfirmation("exit")) {
 //                dbay.updateUserList();
 //                dbay.updateNextItemId();
-//                dbay.updateCars();
+                dbay.updateCars();
 //                dbay.updateMotorCycles();
                     IO.printMessage("See you later!");
                     System.exit(0);

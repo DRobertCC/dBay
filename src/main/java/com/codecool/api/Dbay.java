@@ -32,7 +32,7 @@ public class Dbay {
     private Map<Integer, ItemBoughtInfo> boughtItems = new HashMap<>(); // Which Item (id) was bought by which User (userName) and when.
     private User activeUser = null; // will change after login
 
-    public Dbay() {
+    Dbay() {
         nextItemId = XMLLoader.getnextItemId("data/Dbay.xml");
         lastSavedItemId = nextItemId;
         users = new ArrayList<>(XMLLoader.getUsers("data/Users.xml"));
@@ -107,7 +107,7 @@ public class Dbay {
             throw new AlreadyListedException("\n   We already have a car with the same details!");
         }
         cars.add(newCar);
-        IO.printMessage("\n   " + newCar.name + " successfully added.");
+        IO.printMessage("\n   " + newCar.getName() + " successfully added.");
     }
 
     void listNewMotorCycle() throws DbayException {
@@ -125,18 +125,62 @@ public class Dbay {
             throw new AlreadyListedException("\n   We already have a bike with the same details!");
         }
         motorCycles.add(newMotorCycle);
-        IO.printMessage("   " + newMotorCycle.name + " successfully added.");
+        IO.printMessage("   " + newMotorCycle.getName() + " successfully added.");
     }
 
     void buy() throws DbayException {
         //checkRegisteredUser(activeUser);
-        checkActiveUser();
+        //checkActiveUser();
+        int choose = IO.chooseItemToBuy();
+        int maxId = 0;
+        int itemId = 0;
+        switch (choose) {
+            case 1:
+                printCars();
+                maxId = cars.get(cars.size() - 1).getId();
+                do {
+                    itemId = IO.readInteger("\nPlease enter the id of the car you would like to buy", 1, maxId);
+                } while (isThisCarAvailableToBuy(itemId));
+                break;
+            case 2:
+                printMotorCycles();
+                maxId = motorCycles.get(motorCycles.size() - 1).getId();
+                do {
+                    itemId = IO.readInteger("\nPlease enter the id of the motorcycle you would like to buy", 1, maxId);
+                } while (isThisMotorCycleAvailableToBuy(itemId));
 
-        int itemId = IO.readInteger("\nPlease enter the item id of the product you would like to buy", 1, nextItemId);
-        checkItem(itemId);
+                break;
+        }
+
         checkNotBought(itemId);
-        boughtItems.put(itemId, new ItemBoughtInfo(activeUser, LocalDateTime.now())); // Ha eddig eljutott, akkor vásárolhat.
-        IO.printMessage("\n   " + "Congratulations. You have bought this item.");
+
+        String itemName = "";
+        double itemPrice = 0;
+        switch (choose) {
+            case 1:
+                for (Car car : cars) {
+                    if (car.getId() == itemId) {
+                        itemName = car.getName();
+                        itemPrice = car.getPrice();
+                    }
+                }
+                break;
+            case 2:
+                for (MotorCycle motorCycle : motorCycles) {
+                    if (motorCycle.getId() == itemId) {
+                        itemName = motorCycle.getName();
+                        itemPrice = motorCycle.getPrice();
+                    }
+                }
+                break;
+        }
+
+        if (IO.getConfirmation("buy this item: " + itemName + " for €" + itemPrice)) {
+            boughtItems.put(itemId, new ItemBoughtInfo(activeUser, LocalDateTime.now())); // Ha eddig eljutott, akkor vásárolhat.
+            IO.printMessage("\n   Congratulations. the " + itemName + " is yours!");
+        } else {
+            IO.printMessage("Nothing bought.");
+        }
 
 //        for (Item item : items) {
 //            if ( item.getId().equals(itemId) ) {
@@ -168,10 +212,24 @@ public class Dbay {
         }
     }
 
-    private void checkItem(int itemId) throws NoSuchItemException {
-        if (!Car.contains(itemId, cars) && !MotorCycle.contains(itemId, motorCycles)) {
-            throw new NoSuchItemException("\nNo such item.");
+    private boolean isThisCarAvailableToBuy(int itemId) {
+        int i = 0;
+        while (i < cars.size()) {
+            if (cars.get(i).getId() == itemId) {
+                return true;
+            }
         }
+        return false;
+    }
+
+    private boolean isThisMotorCycleAvailableToBuy(int itemId) {
+        int i = 0;
+        while (i < motorCycles.size()) {
+            if (motorCycles.get(i).getId() == itemId) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void checkNotBought(int itemId) throws AlreadyBoughtException {
@@ -190,10 +248,12 @@ public class Dbay {
     }
 
     void printCars() {
+        IO.printMessage("                                                Available Cars");
         IO.printCars(cars, boughtItems);
     }
 
     void printMotorCycles() {
+        IO.printMessage("                                            Available Motorcycles");
         IO.printMotorCycles(motorCycles, boughtItems);
     }
 

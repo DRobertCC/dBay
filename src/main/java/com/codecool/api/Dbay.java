@@ -22,7 +22,7 @@ public class Dbay {
     }
 
     private static int nextItemId = 0;
-    private static int nextUserID = 0;
+    //private static int nextUserID = 0;
 
     private static int lastSavedItemId;
     private static int lastSavedUserId;
@@ -41,7 +41,7 @@ public class Dbay {
         motorCycles = new ArrayList<>(XMLLoader.getMotorCycles("data/Dbay.xml"));
     }
 
-    public void registerNewUser() {
+    void registerNewUser() {
         IO.printMessage("\n\n    *** Registration of a new user ***");
         IO.printMessage("\nPlease give the following details:");
         String userName;
@@ -51,7 +51,7 @@ public class Dbay {
             for (User user : users) {
                 if (user.getUserName().toLowerCase().equals(userName.toLowerCase())) {
                     free = false;
-                    IO.printMessage("   " + "\n   This username is already registered. Choose another one.");
+                    IO.printMessage("\n   " + "\n   This username is already registered. Choose another one.");
                 }
             }
             if (free) {
@@ -69,11 +69,11 @@ public class Dbay {
         String country = IO.readString("Country of residence", "^[a-zA-Z0-9._]*", "Only the followings permitted: a-z A-Z space");
         User newUser = new User(userName, password, fullName, email, country);
         users.add(newUser);
-        IO.printMessage("   " + newUser.getUserName() + " successfully registered.");
+        IO.printMessage("\n   " + newUser.getUserName() + " successfully registered.");
     }
 
 
-    public void logIn() throws NoSuchUserNamePasswordCombinationException {
+    void logIn() throws NoSuchUserNamePasswordCombinationException {
         IO.printMessage("\nPlease give your login details");
         String userName = IO.readString("Username", "^[a-zA-Z0-9._]*", "Only the followings permitted: a-z A-Z 0-9 ._");
         String password = IO.readString("Password", "(?=.*[a-z]).{6,}", "At least 6 lowercase characters."); // "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}"
@@ -81,7 +81,7 @@ public class Dbay {
 
             if (user.getUserName().toLowerCase().equals(userName.toLowerCase()) && user.getPassword().equals(password)) {
                 activeUser = user;
-                IO.printMessage("   " + userName + " successfully logged in.");
+                IO.printMessage("\n   " + userName + " successfully logged in.");
                 break;
             }
         }
@@ -90,8 +90,8 @@ public class Dbay {
         }
     }
 
-    public void listNewCar() throws DbayException {
-        //checkActiveUser();
+    void listNewCar() throws DbayException {
+        checkActiveUser();
         IO.printMessage("\n\n    *** Listing a car for sale ***");
         IO.printMessage("\nPlease give the following details:");
         String name = IO.readString("Name", "^[a-zA-Z0-9. ]*", "Only the followings permitted: a-z A-Z . space");
@@ -107,11 +107,11 @@ public class Dbay {
             throw new AlreadyListedException("\n   We already have a car with the same details!");
         }
         cars.add(newCar);
-        IO.printMessage("   " + newCar.name + " successfully added.");
+        IO.printMessage("\n   " + newCar.name + " successfully added.");
     }
 
-    public void listNewMotorCycle() throws DbayException {
-        //checkActiveUser();
+    void listNewMotorCycle() throws DbayException {
+        checkActiveUser();
         IO.printMessage("\n\n    *** Listing a motorcycle for sale ***");
         IO.printMessage("\nPlease give the following details:");
         String name = IO.readString("Name", "^[a-zA-Z0-9. ]*", "Only the followings permitted: a-z A-Z . space");
@@ -128,13 +128,13 @@ public class Dbay {
         IO.printMessage("   " + newMotorCycle.name + " successfully added.");
     }
 
-    public void buy(int itemId) throws DbayException {
+    void buy(int itemId) throws DbayException {
         //checkRegisteredUser(activeUser);
         checkActiveUser();
         checkItem(itemId);
         checkNotBought(itemId);
         boughtItems.put(itemId, new ItemBoughtInfo(activeUser, LocalDateTime.now())); // Ha eddig eljutott, akkor vásárolhat.
-        IO.printMessage("   " + "Congratulations. You have bought this item.");
+        IO.printMessage("\n   " + "Congratulations. You have bought this item.");
 //        for (Item item : items) {
 //            if ( item.getId().equals(itemId) ) {
 //                ;
@@ -142,14 +142,14 @@ public class Dbay {
 //        }
     }
 
-    public void logOut() throws NotLoggedInException {
+    void logOut() throws NotLoggedInException {
         if (activeUser != null) {
             if (IO.getConfirmation("logout")) {
                 activeUser = null;
-                IO.printMessage("   You have logged out.");
+                IO.printMessage("\n   You have logged out.");
             }
         } else {
-            throw new NotLoggedInException("Nobody was logged in!");
+            throw new NotLoggedInException("\nNobody was logged in!");
         }
     }
 
@@ -167,7 +167,7 @@ public class Dbay {
 
     private void checkItem(int itemId) throws NoSuchItemException {
         if (!Car.contains(itemId, cars) && !MotorCycle.contains(itemId, motorCycles)) {
-            throw new NoSuchItemException("No such item.");
+            throw new NoSuchItemException("\nNo such item.");
         }
     }
 
@@ -178,19 +178,19 @@ public class Dbay {
         }
     }
 
-    public void printNextId() {
-        IO.printNextId(nextItemId);
-    }
+//    public void printNextId() {
+//        IO.printNextId(nextItemId);
+//    }
 
-    public void printUsers() {
+    void printUsers() {
         IO.printUsers(users);
     }
 
-    public void printCars() {
+    void printCars() {
         IO.printCars(cars, boughtItems);
     }
 
-    public void printMotorCycles() {
+    void printMotorCycles() {
         IO.printMotorCycles(motorCycles, boughtItems);
     }
 
@@ -210,7 +210,7 @@ public class Dbay {
         XMLWriter.updateNextItemIdInXML("data/Dbay.xml", nextItemId);
     }
 
-    public String getActiveUser() {
+    String getActiveUser() {
         if (this.activeUser == null) {
             return "-";
         }

@@ -54,7 +54,7 @@ abstract class IO {
     }
 
     static boolean getConfirmation(String command) {
-        System.out.print( "Are you sure you want to " + command + "? (y or n) " );
+        System.out.print( "\n   Are you sure you want to " + command + "? (y or n) " );
         String input = reader.nextLine().toLowerCase();
         return input.equals("y");
     }

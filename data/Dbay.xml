@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dbay>
+    <ids>
+        <nextitemid>3</nextitemid>
+    </ids>
+    <items>
+        <cars>
+            <car id="1">
+                <name>BMW M5</name>
+                <price>4990.0</price>
+                <yearofmanufacture>2012</yearofmanufacture>
+                <numberofdoors>5</numberofdoors>
+                <typefcarbody>HACHBACK</typefcarbody>
+                <enginesize>1.5</enginesize>
+                <ismanual>true</ismanual>
+                <listedby>Admin</listedby>
+            </car>
+            <car id="2">
+                <name>Ford Mustang</name>
+                <price>9999.0</price>
+                <yearofmanufacture>2000</yearofmanufacture>
+                <numberofdoors>2</numberofdoors>
+                <typefcarbody>COUPE</typefcarbody>
+                <enginesize>15</enginesize>
+                <ismanual>false</ismanual>
+                <listedby>Admin</listedby>
+            </car>
+        </cars>
+        <motorcycles>
+            <motorcycle id="3">
+                <name>Honda CBR</name>
+                <yearofmanufacture>2012</yearofmanufacture>
+                <price>5000.0</price>
+                <enginesize>1.2</enginesize>
+                <typeofmotorcycle>CRUISER</typeofmotorcycle>
+                <listedby>Admin</listedby>
+            </motorcycle>
+        </motorcycles>
+    </items>
+</dbay>

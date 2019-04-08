@@ -10,7 +10,7 @@ public class User {
     private String email;
     private String country;
 
-    public User(String userName, String password, String fullName, String email, String country) {
+    User(String userName, String password, String fullName, String email, String country) {
         this.userName = userName;
         this.password = password;
         this.fullName = fullName;
@@ -18,11 +18,19 @@ public class User {
         this.country = country;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
     /*    @Override
-        public boolean equals(Object obj) {     // Az .equals() alapesetben igy néz ki:
-            return this == obj;   // Ez csak akkor igaz, ha mindkettő ugyanaz a példány / azonos memóriacímen.
-        }
-    */
+            public boolean equals(Object obj) {     // Az .equals() alapesetben igy néz ki:
+                return this == obj;   // Ez csak akkor igaz, ha mindkettő ugyanaz a példány / azonos memóriacímen.
+            }
+        */
 // Alt+Ins - equals() and hashCode():
     @Override          // Override-olom az .equals()-t, hogy érték szerint hasonlítson, és ne referencia szerint.
     public boolean equals(Object o) {
@@ -43,12 +51,10 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "userName='" + userName + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", email='" + email + '\'' +
-                ", country='" + country + '\'' +
-                '}';
+        return String.format("%-15s", userName) +
+                " │ " + String.format("%-30s", fullName) +
+                " │ " + String.format("%-30s", email) +
+                " │ " + String.format("%-20s", country);
     }
 }
 

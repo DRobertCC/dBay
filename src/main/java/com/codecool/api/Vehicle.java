@@ -2,17 +2,23 @@ package com.codecool.api;
 
 public abstract class Vehicle extends Item {
 
-    protected float engineSize;
+    protected double engineSize;
+    protected int yearOfManufacture;
 
-    public Vehicle(int id, String name, float price, float engineSize) {
-        super(id, name, price);
+    public Vehicle(int id, String name, int yearOfManufacture,  double price, double engineSize, String listedBy) {
+        super(id, name, price, listedBy);
+        this.yearOfManufacture = yearOfManufacture;
         this.engineSize = engineSize;
     }
 
     public Vehicle() {
     }
 
-    public float getEngineSize() {
+    public int getYearOfManufacture() {
+        return yearOfManufacture;
+    }
+
+    public double getEngineSize() {
         return engineSize;
     }
 }

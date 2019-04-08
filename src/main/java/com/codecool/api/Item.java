@@ -2,17 +2,20 @@ package com.codecool.api;
 
 public abstract class Item {
 
-    protected int id;
-    protected String name;
-    protected float price;
+    int id;
+    String name;
+    double price;
+    String listedBy; // The username of the lister;
 
-    public Item(int id, String name, float price) {
+
+    Item(int id, String name, double price, String listedBy) {
         this.id = id;
         this.name = name;
         this.price = price;
+        this.listedBy = listedBy;
     }
 
-    public Item() {
+    Item() {
     }
 
     public int getId() {
@@ -23,7 +26,12 @@ public abstract class Item {
         return name;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
+    }
+
+
+    public String getListedBy() {
+        return listedBy;
     }
 }

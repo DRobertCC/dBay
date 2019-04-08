@@ -1,19 +1,30 @@
 package com.codecool.api;
 
+import com.codecool.api.enums.TypeOfCarBody;
+
+import java.util.List;
+import java.util.Objects;
+
 public class Car extends Vehicle{
 
     private int numberOfDoors;
     private TypeOfCarBody typeOfCarBody;
     private boolean isManual;
 
-    public Car(int id, String name, float price, float engineSize, int numberOfDoors, TypeOfCarBody typeOfCarBody, boolean isManual) {
-        super(id, name, price, engineSize);
+    Car(int id, String name, int yearOfManufacture, double price, double engineSize, int numberOfDoors, TypeOfCarBody typeOfCarBody, boolean isManual, String listedBy) {
+        super(id, name, yearOfManufacture, price, engineSize, listedBy);
         this.numberOfDoors = numberOfDoors;
         this.typeOfCarBody = typeOfCarBody;
         this.isManual = isManual;
     }
 
-    public Car() {
+    public static boolean contains(int id, List<Car> items) {
+        for (Item item : items) {
+            if (item.id == id) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public int getNumberOfDoors() {
@@ -30,14 +41,36 @@ public class Car extends Vehicle{
 
     @Override
     public String toString() {
-        return "Car{" +
-                "numberOfDoors=" + numberOfDoors +
-                ", typeOfCarBody=" + typeOfCarBody +
-                ", isManual=" + isManual +
-                ", engineSize=" + engineSize +
-                ", id=" + id +
-                ", name='" + name + '\'' +
-                ", price='" + price + '\'' +
-                '}';
+        return "Car " +
+                String.format("%5s", id) +
+                " │ " + String.format("%-30s", name) +
+                " │ " + String.format("%-13s", typeOfCarBody) +
+                " │ " + String.format("%4s", yearOfManufacture) +
+                " │ " + String.format("%11s", engineSize + " litres") +
+                " │  " + String.format("%2s", numberOfDoors) +
+                "   │ " + String.format("%5s", isManual) +
+                " │ " + String.format("%7s", "€" + price);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Car car = (Car) o;
+        return Objects.equals(
+                name, car.name) &&
+                yearOfManufacture == car.yearOfManufacture &&
+                price == car.price &&
+                engineSize == car.engineSize &&
+                numberOfDoors == car.numberOfDoors &&
+                typeOfCarBody == car.typeOfCarBody &&
+                isManual == car.isManual &&
+                Objects.equals(listedBy, car.listedBy);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(name, yearOfManufacture, price, engineSize, numberOfDoors, typeOfCarBody, isManual, listedBy);
     }
 }

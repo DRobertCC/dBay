@@ -18,7 +18,7 @@ public class Car extends Vehicle{
         this.isManual = isManual;
     }
 
-    public static boolean contains(int id, List<Car> items) {
+    static boolean contains(int id, List<Car> items) {
         for (Item item : items) {
             if (item.id == id) {
                 return true;
@@ -27,17 +27,17 @@ public class Car extends Vehicle{
         return false;
     }
 
-    public int getNumberOfDoors() {
+    int getNumberOfDoors() {
         return numberOfDoors;
     }
 
-    public TypeOfCarBody getTypeOfCarBody() {
+    TypeOfCarBody getTypeOfCarBody() {
         return typeOfCarBody;
     }
 
-    public boolean isManual() {
-        return isManual;
-    }
+//    public boolean isManual() {
+//        return isManual;
+//    }
 
     @Override
     public String toString() {

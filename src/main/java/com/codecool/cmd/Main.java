@@ -1,11 +1,10 @@
 package com.codecool.cmd;
 
-import com.codecool.api.Dbay;
 import com.codecool.api.Menu;
 
 
 public class Main {
-    private static Dbay dbay = new Dbay(); // Lehet statikus, hiszen csak egy lesz belőe per dbay. Így nem kell argumentumként átadni sem minden metódusnak.
+    //private static Dbay dbay = new Dbay(); // Lehet statikus, hiszen csak egy lesz belőe per dbay. Így nem kell argumentumként átadni sem minden metódusnak.
 
     public static void main(String[] args) throws InterruptedException {
         Menu menu = new Menu();

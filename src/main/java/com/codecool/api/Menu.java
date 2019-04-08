@@ -88,7 +88,7 @@ public class Menu {
                 break;
             case 8:
                 try {
-                    dbay.buy(999);
+                    dbay.buy();
                 } catch (DbayException e) {
                     System.err.println(e.getMessage());
                 }

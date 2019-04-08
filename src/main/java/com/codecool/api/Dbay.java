@@ -128,13 +128,16 @@ public class Dbay {
         IO.printMessage("   " + newMotorCycle.name + " successfully added.");
     }
 
-    void buy(int itemId) throws DbayException {
+    void buy() throws DbayException {
         //checkRegisteredUser(activeUser);
         checkActiveUser();
+
+        int itemId = IO.readInteger("\nPlease enter the item id of the product you would like to buy", 1, nextItemId);
         checkItem(itemId);
         checkNotBought(itemId);
         boughtItems.put(itemId, new ItemBoughtInfo(activeUser, LocalDateTime.now())); // Ha eddig eljutott, akkor vásárolhat.
         IO.printMessage("\n   " + "Congratulations. You have bought this item.");
+
 //        for (Item item : items) {
 //            if ( item.getId().equals(itemId) ) {
 //                ;

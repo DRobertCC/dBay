@@ -26,7 +26,7 @@ abstract class IO {
     }
 
     static void printCars(List<Car> cars, Map<Integer, Dbay.ItemBoughtInfo> boughtItems) {
-        System.out.printf("\n%9s %-32s %-15s %4s %11s %9s %5s %7s\n", "  id", "  Name ", "  Body Type ", "  Year ", "  Engine ", "  Doors ", " Manual ", " Price ");
+        System.out.printf("\n%9s %-32s %-15s %4s %11s %9s %7s %7s\n", "  id", "  Name ", "  Body Type ", "  Year ", "  Engine ", "  Doors ", " Gearbox ", " Price ");
         for (Car car : cars) {
             if (!boughtItems.containsKey(car.getId())) {
                 System.out.println(car);

@@ -41,6 +41,12 @@ public class Car extends Vehicle{
 
     @Override
     public String toString() {
+        String gearbox;
+        if (isManual) {
+            gearbox = "Manual";
+        } else {
+            gearbox = "Auto";
+        }
         return "Car " +
                 String.format("%5s", id) +
                 " │ " + String.format("%-30s", name) +
@@ -48,7 +54,7 @@ public class Car extends Vehicle{
                 " │ " + String.format("%4s", yearOfManufacture) +
                 " │ " + String.format("%11s", engineSize + " litres") +
                 " │  " + String.format("%2s", numberOfDoors) +
-                "   │ " + String.format("%5s", isManual) +
+                "   │ " + String.format("%-7s", gearbox) +
                 " │ " + String.format("%7s", "€" + price);
     }
 

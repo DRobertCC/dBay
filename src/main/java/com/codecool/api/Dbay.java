@@ -147,9 +147,9 @@ public class Dbay {
             if (IO.getConfirmation("logout")) {
                 activeUser = null;
                 IO.printMessage("   You have logged out.");
-            } else {
-                throw new NotLoggedInException("Nobody was logged in!");
             }
+        } else {
+            throw new NotLoggedInException("Nobody was logged in!");
         }
     }
 

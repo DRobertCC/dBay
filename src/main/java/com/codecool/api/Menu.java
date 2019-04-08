@@ -103,13 +103,15 @@ public class Menu {
                 IO.enterToContinue();
                 break;
             case 0:
+                if (IO.getConfirmation("exit")) {
 //                dbay.updateUserList();
 //                dbay.updateNextItemId();
 //                dbay.updateCars();
 //                dbay.updateMotorCycles();
-                IO.printMessage("See you later!");
-                System.exit(0);
-                break;
+                    IO.printMessage("See you later!");
+                    System.exit(0);
+                    break;
+                }
         }
     }
 }

@@ -9,12 +9,12 @@ public class MotorCycle extends Vehicle {
 
     private TypeOfMotorCycle typeOfMotorCycle;
 
-    MotorCycle(int id, String name, int yearOfManufacture, double price, double engineSize, TypeOfMotorCycle typeOfMotorCycle, String listedBy) {
+    public MotorCycle(int id, String name, int yearOfManufacture, double price, double engineSize, TypeOfMotorCycle typeOfMotorCycle, String listedBy) {
         super(id, name, yearOfManufacture, price, engineSize, listedBy);
         this.typeOfMotorCycle = typeOfMotorCycle;
     }
 
-    static boolean contains(int id, List<MotorCycle> items) {
+    public static boolean contains(int id, List<MotorCycle> items) {
         for (Item item : items) {
             if (item.getId() == id) {
                 return true;

@@ -1,7 +1,5 @@
 package com.codecool.cmd;
 
-import com.codecool.api.Menu;
-
 
 public class Main {
     //private static Dbay dbay = new Dbay(); // Lehet statikus, hiszen csak egy lesz belőe per dbay. Így nem kell argumentumként átadni sem minden metódusnak.
@@ -35,7 +33,7 @@ public class Main {
 //        dbay.printCars(); // Ok
 //        dbay.printMotorCycles(); // Ok
 //
-//        dbay.registerNewUser();
+//        menu.register();
 //        dbay.printUsers();
 //
 //        try {

@@ -1,5 +1,6 @@
 package com.codecool.api;
 
+import com.codecool.cmd.IO;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -88,19 +89,19 @@ abstract class XMLWriter extends XMLParser {
         IO.printMessage("Not implemented yet.");
     }
 
-    static void updateNextItemIdInXML(String xmlPath, int nextItemId) {
+    static void updateCurrentItemIdInXML(String xmlPath, int nextItemId) {
 
         Document doc = loadXMLDocument(xmlPath);
 
         XPath xPath = XPathFactory.newInstance().newXPath();
-        Node nextitemidNode = null;
+        Node currentItemIdNode = null;
         try {
-            nextitemidNode = (Node) xPath.compile("/dbay/ids/nextitemid").evaluate(doc, XPathConstants.NODE);
+            currentItemIdNode = (Node) xPath.compile("/dbay/ids/currentitemid").evaluate(doc, XPathConstants.NODE);
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
-        assert nextitemidNode != null;
-        nextitemidNode.setTextContent(Integer.toString(nextItemId));
+        assert currentItemIdNode != null;
+        currentItemIdNode.setTextContent(Integer.toString(nextItemId));
 
         try {
             writeXMLDocument(doc, xmlPath);

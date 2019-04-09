@@ -90,18 +90,18 @@ abstract class XMLLoader extends XMLParser {
     }
 
     static int getnextItemId(String path) {
-        Document nextIdDoc = loadXMLDocument(path);
-        Element dbays = (Element) nextIdDoc.getElementsByTagName("dbay").item(0);
+        Document currentItemIdDoc = loadXMLDocument(path);
+        Element dbays = (Element) currentItemIdDoc.getElementsByTagName("dbay").item(0);
         NodeList nList = dbays.getElementsByTagName("ids");
 
         Node nNode = nList.item(0);
-        int nextId = -1;
+        int currentItemId = -1;
 
         if (nNode.getNodeType() == Node.ELEMENT_NODE) {
             Element eElement = (Element) nNode;
-            nextId = Integer.parseInt(eElement.getElementsByTagName("nextitemid").item(0).getTextContent());
+            currentItemId = Integer.parseInt(eElement.getElementsByTagName("currentitemid").item(0).getTextContent());
         }
-        return nextId;
+        return currentItemId;
     }
 
 }

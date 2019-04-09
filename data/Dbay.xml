@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dbay>
     <ids>
-        <nextitemid>3</nextitemid>
+        <currentitemid>3</currentitemid>
     </ids>
     <items>
         <cars>
@@ -21,7 +21,7 @@
                 <yearofmanufacture>2000</yearofmanufacture>
                 <numberofdoors>2</numberofdoors>
                 <typefcarbody>COUPE</typefcarbody>
-                <enginesize>15</enginesize>
+                <enginesize>5</enginesize>
                 <ismanual>false</ismanual>
                 <listedby>Admin</listedby>
             </car>

@@ -1,6 +1,6 @@
 package com.codecool.api;
 
-abstract class Item {
+public abstract class Item {
 
     private int id;
     private String name;
@@ -15,20 +15,19 @@ abstract class Item {
         this.listedBy = listedBy;
     }
 
-    int getId() {
+    public int getId() {
         return id;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
-    double getPrice() {
+    public double getPrice() {
         return price;
     }
 
-
-    String getListedBy() {
+    public String getListedBy() {
         return listedBy;
     }
 }

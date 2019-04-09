@@ -11,7 +11,7 @@ public class Car extends Vehicle{
     private TypeOfCarBody typeOfCarBody;
     private boolean isManual;
 
-    Car(int id, String name, int yearOfManufacture, double price, double engineSize, int numberOfDoors, TypeOfCarBody typeOfCarBody, boolean isManual, String listedBy) {
+    public Car(int id, String name, int yearOfManufacture, double price, double engineSize, int numberOfDoors, TypeOfCarBody typeOfCarBody, boolean isManual, String listedBy) {
         super(id, name, yearOfManufacture, price, engineSize, listedBy);
         this.numberOfDoors = numberOfDoors;
         this.typeOfCarBody = typeOfCarBody;

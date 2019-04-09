@@ -1,6 +1,6 @@
 package com.codecool.api;
 
-abstract class Vehicle extends Item {
+public abstract class Vehicle extends Item {
 
     private double engineSize;
     private int yearOfManufacture;

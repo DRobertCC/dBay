@@ -1,5 +1,6 @@
-package com.codecool.api;
+package com.codecool.cmd;
 
+import com.codecool.api.*;
 import com.codecool.api.enums.TypeOfCarBody;
 import com.codecool.api.enums.TypeOfMotorCycle;
 
@@ -7,38 +8,45 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-abstract class IO {
+public abstract class IO {
 
     private static Scanner reader = new Scanner(System.in);
 
     IO() {
     }
 
-    static void printNextId(int nextId) {
+    public static void printNextId(int nextId) {
         System.out.println("nextId: " + nextId);
     }
 
-    static void printUsers(List<User> users) {
-        System.out.printf("\n%-15s %-31s %-31s %-22s\n", "Username", "  Name ", "   Email ", "    Country");
+
+
+    public static void printUserList(List<User> users, String title, String[] headerPositions, String[] headerTitles) {
+        System.out.println(title);
+        System.out.println();
+        for (int i = 0; i < headerTitles.length; i++) {
+            System.out.print(String.format(headerPositions[i], headerTitles[i]));
+        }
+        System.out.println();
         for (User user : users) {
             System.out.println(user);
         }
     }
 
-    static void printCars(List<Car> cars, Map<Integer, Dbay.ItemBoughtInfo> boughtItems) {
-        if (cars.isEmpty()) {
+    public static void printItemByType(List<Item> items, Map<Integer, Dbay.ItemBoughtInfo> boughtItems, Class itemType) {
+        if (items.isEmpty()) {
             IO.printMessage("\n   Nothing for sale at the moment. Please check back later.");
         } else {
             System.out.printf("\n%9s %-32s %-15s %4s %11s %9s %7s %7s\n", "  id", "  Name ", "  Body Type ", "  Year ", "  Engine ", "  Doors ", " Gearbox ", " Price ");
-            for (Car car : cars) {
-                if (!boughtItems.containsKey(car.getId())) {
-                    System.out.println(car);
+            for (Item item : items) {
+                if (!boughtItems.containsKey(item.getId()) && itemType.isInstance(item)) {
+                    System.out.println(item);
                 }
             }
         }
     }
 
-    static void printMotorCycles(List<MotorCycle> motorCycles, Map<Integer, Dbay.ItemBoughtInfo> boughtItems) {
+    public static void printMotorCycles(List<MotorCycle> motorCycles, Map<Integer, Dbay.ItemBoughtInfo> boughtItems) {
         if (motorCycles.isEmpty()) {
             IO.printMessage("\n   Nothing for sale at the moment. Please check back later.");
         } else {
@@ -51,23 +59,23 @@ abstract class IO {
         }
     }
 
-    static void printMessage(String message) {
+    public static void printMessage(String message) {
         System.out.println(message);
     }
 
-    static void enterToContinue() throws InterruptedException {
+    public static void enterToContinue() throws InterruptedException {
         Thread.sleep(100);
         System.err.println( "\nPress enter to continue..." );
         String input = reader.nextLine();
     }
 
-    static boolean getConfirmation(String command) {
+    public static boolean getConfirmation(String command) {
         System.out.print( "\n   Are you sure you want to " + command + "? (y or n) " );
         String input = reader.nextLine().toLowerCase();
         return input.equals("y");
     }
 
-    static int readInteger(String message, int from, int to) {
+    public static int readInteger(String message, int from, int to) {
 
         while (true) {
             System.out.print(message + ": ");
@@ -85,7 +93,7 @@ abstract class IO {
         }
     }
 
-    static double readDouble(String message, double from, double to) {
+    public static double readDouble(String message, double from, double to) {
 
         while (true) {
             System.out.print(message + ": ");
@@ -103,7 +111,7 @@ abstract class IO {
         }
     }
 
-    static String readString(String message, String regEx, String invalidFormMessage) {
+    public static String readString(String message, String regEx, String invalidFormMessage) {
 
         while (true) {
             System.out.print(message + ": ");
@@ -121,17 +129,17 @@ abstract class IO {
         }
     }
 
-    static boolean chooseIsManual() {
+    public static boolean chooseIsManual() {
         int input = readInteger("Choose the gearbox type: 1 = Manual or 2 = Automatic ", 1, 2);
         return input == 1;
     }
 
-    static int chooseItemToBuy() {
+    public static int chooseItemToBuy() {
         int input = readInteger("\nWhat would like to do?\n   1 = Buy Car\n   2 = Buy Motorcycle\nChoose one", 1, 2);
         return input;
     }
 
-    static TypeOfCarBody chooseTypeOfCarBody() {
+    public static TypeOfCarBody chooseTypeOfCarBody() {
         int i = 0;
         System.out.println("Available choices of body types: ");
         for (TypeOfCarBody type : TypeOfCarBody.values()) {
@@ -158,7 +166,7 @@ abstract class IO {
         return TypeOfCarBody.CROSSOVER;
     }
 
-    static TypeOfMotorCycle chooseTypeOfMotorCycle() {
+    public static TypeOfMotorCycle chooseTypeOfMotorCycle() {
         int i = 0;
         System.out.println("Available choices of motorcycle types: ");
         for (TypeOfMotorCycle type : TypeOfMotorCycle.values()) {

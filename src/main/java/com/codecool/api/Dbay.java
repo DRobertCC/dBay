@@ -62,19 +62,9 @@ public class Dbay {
             }
         }
         if (activeUser == null) {
-            throw new NoSuchUserNamePasswordCombinationException("\n   Wrong username and/or password");
+            throw new NoSuchUserNamePasswordCombinationException("Wrong username and/or password");
         }
     }
-
-    public void printUsers() {
-    }
-
-    public void printCars() {
-    }
-
-    public void printMotorCycles() {
-    }
-
 
     public void listNewCar() throws DbayException {
         checkActiveUser();
@@ -90,7 +80,7 @@ public class Dbay {
         String listedBy = "Admin"; //activeUser.getUserName();
         Car newCar = new Car(++currentIemId, name, yearOfManufacture, price, engineSize, numberOfDoors, typeOfCarBody, isManual, listedBy);
         if (items.contains(newCar)) {
-            throw new AlreadyListedException("\n   We already have a car with the same details!");
+            throw new AlreadyListedException("We already have a car with the same details!");
         }
         items.add(newCar);
         IO.printMessage("\n   " + newCar.getName() + " successfully added.");
@@ -98,7 +88,7 @@ public class Dbay {
 
     public void listNewMotorCycle() throws DbayException {
         checkActiveUser();
-        IO.printMessage("\n\n    *** Listing a motorcycle for sale ***");
+        IO.printMessage("\n *** Listing a motorcycle for sale ***");
         IO.printMessage("\nPlease give the following details:");
         String name = IO.readString("Name", "^[a-zA-Z0-9. ]*", "Only the followings permitted: a-z A-Z . space");
         int yearOfManufacture = IO.readInteger("Manufacturing year", 1900, Calendar.getInstance().get(Calendar.YEAR));
@@ -108,7 +98,7 @@ public class Dbay {
         String listedBy = "Admin"; //activeUser.getUserName();
         MotorCycle newMotorCycle = new MotorCycle(++currentIemId, name, yearOfManufacture, price, engineSize, typeOfMotorCycle, listedBy);
         if (items.contains(newMotorCycle)) {
-            throw new AlreadyListedException("\n   We already have a bike with the same details!");
+            throw new AlreadyListedException("We already have a bike with the same details!");
         }
         items.add(newMotorCycle);
         IO.printMessage("   " + newMotorCycle.getName() + " successfully added.");
@@ -181,25 +171,29 @@ public class Dbay {
 
     public void logOut() throws NotLoggedInException {
         if (activeUser != null) {
-            if (IO.getConfirmation("logout")) {
-                activeUser = null;
-                IO.printMessage("\n   You have logged out.");
-            }
+            activeUser = null;
         } else {
-            throw new NotLoggedInException("\nNobody was logged in!");
+            throw new NotLoggedInException("Nobody is logged in!");
         }
     }
 
     private void checkRegisteredUser(User user) throws NotRegisteredException {
         if (!users.contains(user)) {
-            throw new NotRegisteredException("\n   Please register first.");
+            throw new NotRegisteredException("Please register first.");
         }
     }
 
     private void checkActiveUser() throws NotLoggedInException {
         if (activeUser == null) {
-            throw new NotLoggedInException("\n   You must be logged in to post new listings or buy anything!");
+            throw new NotLoggedInException("You must be logged in to post new listings or buy anything!");
         }
+    }
+
+    public String getActiveUser() {
+        if (this.activeUser == null) {
+            return "-";
+        }
+        return this.activeUser.getUserName();
     }
 
 /*
@@ -227,7 +221,7 @@ public class Dbay {
     private void checkNotBought(int itemId) throws AlreadyBoughtException {
         if (boughtItems.containsKey(itemId)) {
             ItemBoughtInfo info = boughtItems.get(itemId); // Az itemId-hez tarozó rekord letárolása. Ezáltal hozzáférek a fieldjeihez:
-            throw new AlreadyBoughtException("\n   id: " + itemId + " already bought at " + info.date);
+            throw new AlreadyBoughtException("id: " + itemId + " already bought at " + info.date);
         }
     }
 
@@ -251,23 +245,49 @@ public class Dbay {
 //        XMLWriter.updateCurrentItemIdInXML("data/Dbay.xml", currentIemId);
 //    }
 
-    public String getActiveUser() {
-        if (this.activeUser == null) {
-            return "-";
-        }
-        return this.activeUser.getUserName();
-    }
-
     public static int getCurrentIemId() {
         return currentIemId;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public List<User> getUsers() throws NoRegisteredUsersException {
+        if (!users.isEmpty()) {
+            return users;
+
+        } else {
+            throw new NoRegisteredUsersException("No registered users");
+        }
     }
 
-    public List<Item> getItems() {
-        return items;
+    public List<Item> getAvailableCars() throws NothingForSaleAtTheMomentException {
+        List<Item> cars = new ArrayList<>();
+        if (!items.isEmpty()) {
+            for (Item item : items) {
+                if (!boughtItems.containsKey(item.getId()) && item instanceof Car) {
+                    cars.add(item);
+                }
+            }
+        } else {
+            if (cars.isEmpty()) {
+                throw new NothingForSaleAtTheMomentException("Nothing for sale at the moment. Please check back later.");
+            }
+        }
+        return cars;
+    }
+
+    public List<Item> getAvailableMotorCycles() throws NothingForSaleAtTheMomentException {
+        List<Item> motorCycles = new ArrayList<>();
+        if (!items.isEmpty()) {
+            for (Item item : items) {
+                if (!boughtItems.containsKey(item.getId()) && item instanceof MotorCycle) {
+                    motorCycles.add(item);
+                }
+            }
+        } else {
+            if (motorCycles.isEmpty()) {
+                throw new NothingForSaleAtTheMomentException("Nothing for sale at the moment. Please check back later.");
+            }
+        }
+        return motorCycles;
     }
 
     public Map<Integer, ItemBoughtInfo> getBoughtItems() {

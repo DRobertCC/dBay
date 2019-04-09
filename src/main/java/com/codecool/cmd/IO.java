@@ -1,11 +1,11 @@
 package com.codecool.cmd;
 
-import com.codecool.api.*;
+import com.codecool.api.Item;
+import com.codecool.api.User;
 import com.codecool.api.enums.TypeOfCarBody;
 import com.codecool.api.enums.TypeOfMotorCycle;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public abstract class IO {
@@ -33,29 +33,15 @@ public abstract class IO {
         }
     }
 
-    public static void printItemByType(List<Item> items, Map<Integer, Dbay.ItemBoughtInfo> boughtItems, Class itemType) {
-        if (items.isEmpty()) {
-            IO.printMessage("\n   Nothing for sale at the moment. Please check back later.");
-        } else {
-            System.out.printf("\n%9s %-32s %-15s %4s %11s %9s %7s %7s\n", "  id", "  Name ", "  Body Type ", "  Year ", "  Engine ", "  Doors ", " Gearbox ", " Price ");
-            for (Item item : items) {
-                if (!boughtItems.containsKey(item.getId()) && itemType.isInstance(item)) {
-                    System.out.println(item);
-                }
-            }
+    public static void printItemByType(List<Item> items, String title, String[] headerPositions, String[] headerTitles) {
+        System.out.println(title);
+        System.out.println();
+        for (int i = 0; i < headerTitles.length; i++) {
+            System.out.print(String.format(headerPositions[i], headerTitles[i]));
         }
-    }
-
-    public static void printMotorCycles(List<MotorCycle> motorCycles, Map<Integer, Dbay.ItemBoughtInfo> boughtItems) {
-        if (motorCycles.isEmpty()) {
-            IO.printMessage("\n   Nothing for sale at the moment. Please check back later.");
-        } else {
-            System.out.printf("\n%16s %-32s %-15s %4s %10s %10s\n", "  id", "  Name ", "  Type ", "  Year ", "  Engine ", " Price ");
-            for (MotorCycle motorCycle : motorCycles) {
-                if (!boughtItems.containsKey(motorCycle.getId())) {
-                    System.out.println(motorCycle);
-                }
-            }
+        System.out.println();
+        for (Item user : items) {
+            System.out.println(user);
         }
     }
 
@@ -70,8 +56,7 @@ public abstract class IO {
     }
 
     public static boolean getConfirmation(String command) {
-        System.out.print( "\n   Are you sure you want to " + command + "? (y or n) " );
-        String input = reader.nextLine().toLowerCase();
+        String input = IO.readString( "\nAre you sure you want to " + command + "? (y or n) ", "^[yn]", "Only type y or n");
         return input.equals("y");
     }
 
@@ -121,6 +106,25 @@ public abstract class IO {
                 if (input.matches(regEx)) {
                     return input;
                 } else {
+                    System.err.println(
+                            invalidFormMessage + " Please try again.");
+                }
+            } catch (Exception e) {
+                System.err.println("   You haven't written a proper data.");
+            }
+        }
+    }
+
+    public static String readChar(String message, String regEx, String invalidFormMessage) {
+
+        while (true) {
+            System.out.print(message + ": ");
+
+            try {
+                String input = reader.nextLine();
+                if (input.matches(regEx)) {
+                    return input;
+                } else {
                     System.err.println("   The form of the " + message.toLowerCase() + " was improper. " + invalidFormMessage + " Please try again.");
                 }
             } catch (Exception e) {
@@ -128,6 +132,7 @@ public abstract class IO {
             }
         }
     }
+
 
     public static boolean chooseIsManual() {
         int input = readInteger("Choose the gearbox type: 1 = Manual or 2 = Automatic ", 1, 2);

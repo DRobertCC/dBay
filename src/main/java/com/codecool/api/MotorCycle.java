@@ -29,12 +29,11 @@ public class MotorCycle extends Vehicle {
 
     @Override
     public String toString() {
-        return "MotorCycle " +
-                String.format("%5s", this.getId()) +
+        return String.format("%6s", this.getId()) +
                 " │ " + String.format("%-30s", this.getName()) +
                 " │ " + String.format("%-13s", typeOfMotorCycle) +
                 " │ " + String.format("%4s", this.getYearOfManufacture()) +
-                " │ " + String.format("%10s", this.getEngineSize() + " litres") +
+                " │ " + String.format("%11s", this.getEngineSize() + " litres") +
                 " │ " + String.format("%7s", "€" + this.getPrice());
     }
 

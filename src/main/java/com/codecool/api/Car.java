@@ -47,8 +47,7 @@ public class Car extends Vehicle{
         } else {
             gearbox = "Auto";
         }
-        return "Car " +
-                String.format("%5s", this.getId()) +
+        return String.format("%6s", this.getId()) +
                 " │ " + String.format("%-30s", this.getName()) +
                 " │ " + String.format("%-13s", typeOfCarBody) +
                 " │ " + String.format("%4s", this.getYearOfManufacture()) +

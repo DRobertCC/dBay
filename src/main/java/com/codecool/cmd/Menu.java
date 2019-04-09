@@ -4,10 +4,7 @@ package com.codecool.cmd;
 import com.codecool.api.*;
 import com.codecool.api.enums.TypeOfCarBody;
 import com.codecool.api.enums.TypeOfMotorCycle;
-import com.codecool.api.exeption.AlreadyRegisteredException;
-import com.codecool.api.exeption.DbayException;
-import com.codecool.api.exeption.NoSuchUserNamePasswordCombinationException;
-import com.codecool.api.exeption.NotLoggedInException;
+import com.codecool.api.exeption.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,17 +47,17 @@ public class Menu {
 
     public void printMenu(String title, String[] listOptions, String exitMessage) {
         System.out.print("\033[H\033[2J");
-        IO.printMessage(title);
+        System.out.println(title);
         int i = 0;
         while (i <= listOptions.length) {
             if (i == listOptions.length) {
                 break;
             } else {
-                IO.printMessage(String.format("( %1d )  %-10s", i + 1, listOptions[i]));
+                System.out.println(String.format("( %1d )  %-10s", i + 1, listOptions[i]));
                 i++;
             }
         }
-        IO.printMessage(String.format("( %1s )  %-10s", "0", exitMessage));
+        System.out.println(String.format("( %1s )  %-10s", "0", exitMessage));
     }
 
     public void choose() throws InterruptedException {
@@ -79,43 +76,39 @@ public class Menu {
                 IO.enterToContinue();
                 break;
             case 4:
-                //printCars();
+                printAvailableCars();
                 IO.enterToContinue();
                 break;
             case 5:
-                //printMotorCycles();
+                printAvailableMotorCycles();
                 IO.enterToContinue();
                 break;
             case 6:
-                try {
-                    dbay.listNewCar();
-                } catch (DbayException e) {
-                    System.err.println(e.getMessage());
-                }
+//                try {
+//                    dbay.listNewCar();
+//                } catch (DbayException e) {
+//                    System.err.println("\n   " + e.getMessage());
+//                }
                 IO.enterToContinue();
                 break;
             case 7:
-                try {
-                    dbay.listNewMotorCycle();
-                } catch (DbayException e) {
-                    System.err.println(e.getMessage());
-                }
+//                try {
+//                    dbay.listNewMotorCycle();
+//                } catch (DbayException e) {
+//                    System.err.println("\n   " + e.getMessage());
+//                }
                 IO.enterToContinue();
                 break;
             case 8:
 //                try {
 //                    dbay.buy();
 //                } catch (DbayException e) {
-//                    System.err.println(e.getMessage());
+//                    System.err.println("\n   " + e.getMessage());
 //                }
                 IO.enterToContinue();
                 break;
             case 9:
-                try {
-                    dbay.logOut();
-                } catch (NotLoggedInException e) {
-                    System.err.println(e.getMessage());
-                }
+                logOut();
                 IO.enterToContinue();
                 break;
             case 0:
@@ -124,7 +117,7 @@ public class Menu {
 //                dbay.updateNextItemId();
 //                dbay.updateCars();
 //                dbay.updateMotorCycles();
-                    IO.printMessage("See you later!");
+                    System.out.println("See you later!");
                     System.exit(0);
                     break;
                 }
@@ -132,17 +125,21 @@ public class Menu {
     }
 
     public void register() {
-        IO.printMessage("\n\n    *** Registration of a new user ***");
-        IO.printMessage("\nPlease give the following details:");
+        System.out.println("\n\n    *** Registration of a new user ***");
+        System.out.println("\nPlease give the following details:");
         String userName;
         while (true) {
             boolean free = true;
             userName = IO.readString("Username", "^[a-zA-Z0-9._]*", "Only the followings permitted: a-z A-Z 0-9 ._");
-            for (User user : dbay.getUsers()) {
-                if (user.getUserName().toLowerCase().equals(userName.toLowerCase())) {
-                    free = false;
-                    IO.printMessage("\n   " + "\n   This username is already registered. Choose another one.");
+            try {
+                for (User user : dbay.getUsers()) {
+                    if (user.getUserName().toLowerCase().equals(userName.toLowerCase())) {
+                        free = false;
+                        System.err.println("\n   " + "\n   This username is already registered. Choose another one.");
+                    }
                 }
+            } catch (NoRegisteredUsersException e) {
+                System.err.println("\n   " + e.getMessage());
             }
             if (free) {
                 break;
@@ -164,20 +161,20 @@ public class Menu {
         } catch (AlreadyRegisteredException e) {
             System.err.println(e.getMessage() + ": " + newUser.getUserName());
         }
-        IO.printMessage("\n   " + newUser.getUserName() + " successfully registered.");
+        System.out.println("\n   " + newUser.getUserName() + " successfully registered.");
     }
 
     public void logIn() {
-        IO.printMessage("\nPlease give your login details");
+        System.out.println("\nPlease give your login details");
         String userName = IO.readString("Username", "^[a-zA-Z0-9._]*", "Only the followings permitted: a-z A-Z 0-9 ._");
         String password = IO.readString("Password", "(?=.*[a-z]).{6,}", "At least 6 lowercase characters."); // "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}"
 
         try {
             dbay.logIn(userName, password);
+            System.out.println("\n   " + userName + " successfully logged in.");
         } catch (NoSuchUserNamePasswordCombinationException e) {
-            System.err.println(e.getMessage());
+            System.err.println("\n   " + e.getMessage());
         }
-        IO.printMessage("\n   " + userName + " successfully logged in.");
     }
 
     public void printUserList() {
@@ -185,42 +182,50 @@ public class Menu {
         String[] headerPositions = {"%-18s", "%-33s", "%-33s", "%-26s"};
         String[] headerTitles = {"Username", "Name ", "Email ", "Country"};
 
-        IO.printUserList(dbay.getUsers(), title, headerPositions, headerTitles);
+        try {
+            IO.printUserList(dbay.getUsers(), title, headerPositions, headerTitles);
+        } catch (NoRegisteredUsersException e) {
+            System.err.println("\n   " + e.getMessage());
+        }
     }
 
-//    public void printCars() {
-//        IO.printMessage("                                                Available Cars");
-//        IO.printItemByType(dbay.getItems(), dbay.getBoughtItems()));
-//    }
-//
-//    public void printMotorCycles() {
-//        IO.printMessage("                                            Available Motorcycles");
-//        IO.printItemByType(dbay.getItems(), dbay.getBoughtItems());
-//    }
+    public void printAvailableCars() {
+        String title = "                                                Available Cars";
+        String[] headerPositions = {"%6s", "%-36s", "%-16s", "%-10s", "%-11s", "%-8s", "%-10s", "%-7s"};
+        String[] headerTitles = {"id", "   Name", "Body Type", "Year", "Engine", "Doors", "Gearbox", " Price"};
+        try {
+            List<Item> cars = new ArrayList<>(dbay.getAvailableCars());
+            IO.printItemByType(cars, title, headerPositions, headerTitles);
+        } catch (NothingForSaleAtTheMomentException e) {
+            System.err.println("\n   " + e.getMessage());
 
+        }
+    }
 
+    public void printAvailableMotorCycles() {
+        String title = "                                         Available Motorcycles";
+        String[] headerPositions = {"%6s", "%-36s", "%-16s", "%-10s", "%-12s", "%-10s"};
+        String[] headerTitles = {"id", "   Name", "Type", "Year", "Engine", "Price"};
+        try {
+            List<Item> cars = new ArrayList<>(dbay.getAvailableMotorCycles());
+            IO.printItemByType(cars, title, headerPositions, headerTitles);
+        } catch (NothingForSaleAtTheMomentException e) {
+            System.err.println("\n   " + e.getMessage());
+        }
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public void logOut() {
+        if (dbay.getActiveUser().equals("-")) {
+            System.err.println("\n   Nobody is logged in!");
+        } else {
+            if (IO.getConfirmation("logout")) {
+                try {
+                    dbay.logOut();
+                    System.out.println("\n   You have logged out.");
+                } catch (NotLoggedInException e) {
+                    System.err.println("\n   " + e.getMessage());
+                }
+            }
+        }
+    }
 }

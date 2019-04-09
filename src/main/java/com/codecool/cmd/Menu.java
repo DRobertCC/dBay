@@ -198,7 +198,6 @@ public class Menu {
             IO.printItemByType(cars, title, headerPositions, headerTitles);
         } catch (NothingForSaleAtTheMomentException e) {
             System.err.println("\n   " + e.getMessage());
-
         }
     }
 
@@ -212,6 +211,18 @@ public class Menu {
         } catch (NothingForSaleAtTheMomentException e) {
             System.err.println("\n   " + e.getMessage());
         }
+    }
+
+    public void listNewCar() {
+
+    }
+
+    public void listNewMotorCycle() {
+
+    }
+
+    public void buyItem() {
+
     }
 
     public void logOut() {

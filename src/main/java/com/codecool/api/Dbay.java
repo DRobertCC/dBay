@@ -66,6 +66,46 @@ public class Dbay {
         }
     }
 
+    public List<User> getUsers() throws NoRegisteredUsersException {
+        if (!users.isEmpty()) {
+            return users;
+        } else {
+            throw new NoRegisteredUsersException("No registered users");
+        }
+    }
+
+    public List<Item> getAvailableCars() throws NothingForSaleAtTheMomentException {
+        List<Item> cars = new ArrayList<>();
+        if (!items.isEmpty()) {
+            for (Item item : items) {
+                if (!boughtItems.containsKey(item.getId()) && item instanceof Car) {
+                    cars.add(item);
+                }
+            }
+        } else {
+            if (cars.isEmpty()) {
+                throw new NothingForSaleAtTheMomentException("Nothing for sale at the moment. Please check back later.");
+            }
+        }
+        return cars;
+    }
+
+    public List<Item> getAvailableMotorCycles() throws NothingForSaleAtTheMomentException {
+        List<Item> motorCycles = new ArrayList<>();
+        if (!items.isEmpty()) {
+            for (Item item : items) {
+                if (!boughtItems.containsKey(item.getId()) && item instanceof MotorCycle) {
+                    motorCycles.add(item);
+                }
+            }
+        } else {
+            if (motorCycles.isEmpty()) {
+                throw new NothingForSaleAtTheMomentException("Nothing for sale at the moment. Please check back later.");
+            }
+        }
+        return motorCycles;
+    }
+
     public void listNewCar() throws DbayException {
         checkActiveUser();
         IO.printMessage("\n\n    *** Listing a car for sale ***");
@@ -102,6 +142,10 @@ public class Dbay {
         }
         items.add(newMotorCycle);
         IO.printMessage("   " + newMotorCycle.getName() + " successfully added.");
+    }
+
+    public Map<Integer, ItemBoughtInfo> getBoughtItems() {
+        return boughtItems;
     }
 
 /*
@@ -247,50 +291,5 @@ public class Dbay {
 
     public static int getCurrentIemId() {
         return currentIemId;
-    }
-
-    public List<User> getUsers() throws NoRegisteredUsersException {
-        if (!users.isEmpty()) {
-            return users;
-
-        } else {
-            throw new NoRegisteredUsersException("No registered users");
-        }
-    }
-
-    public List<Item> getAvailableCars() throws NothingForSaleAtTheMomentException {
-        List<Item> cars = new ArrayList<>();
-        if (!items.isEmpty()) {
-            for (Item item : items) {
-                if (!boughtItems.containsKey(item.getId()) && item instanceof Car) {
-                    cars.add(item);
-                }
-            }
-        } else {
-            if (cars.isEmpty()) {
-                throw new NothingForSaleAtTheMomentException("Nothing for sale at the moment. Please check back later.");
-            }
-        }
-        return cars;
-    }
-
-    public List<Item> getAvailableMotorCycles() throws NothingForSaleAtTheMomentException {
-        List<Item> motorCycles = new ArrayList<>();
-        if (!items.isEmpty()) {
-            for (Item item : items) {
-                if (!boughtItems.containsKey(item.getId()) && item instanceof MotorCycle) {
-                    motorCycles.add(item);
-                }
-            }
-        } else {
-            if (motorCycles.isEmpty()) {
-                throw new NothingForSaleAtTheMomentException("Nothing for sale at the moment. Please check back later.");
-            }
-        }
-        return motorCycles;
-    }
-
-    public Map<Integer, ItemBoughtInfo> getBoughtItems() {
-        return boughtItems;
     }
 }

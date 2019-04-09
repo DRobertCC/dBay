@@ -133,7 +133,6 @@ public abstract class IO {
         }
     }
 
-
     public static boolean chooseIsManual() {
         int input = readInteger("Choose the gearbox type: 1 = Manual or 2 = Automatic ", 1, 2);
         return input == 1;

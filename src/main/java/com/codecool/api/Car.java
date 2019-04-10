@@ -2,7 +2,6 @@ package com.codecool.api;
 
 import com.codecool.api.enums.TypeOfCarBody;
 
-import java.util.List;
 import java.util.Objects;
 
 public class Car extends Vehicle{
@@ -16,15 +15,6 @@ public class Car extends Vehicle{
         this.numberOfDoors = numberOfDoors;
         this.typeOfCarBody = typeOfCarBody;
         this.isManual = isManual;
-    }
-
-    static boolean contains(int id, List<Car> items) {
-        for (Item item : items) {
-            if (item.getId() == id) {
-                return true;
-            }
-        }
-        return false;
     }
 
     int getNumberOfDoors() {

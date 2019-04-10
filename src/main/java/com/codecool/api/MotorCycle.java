@@ -2,7 +2,6 @@ package com.codecool.api;
 
 import com.codecool.api.enums.TypeOfMotorCycle;
 
-import java.util.List;
 import java.util.Objects;
 
 public class MotorCycle extends Vehicle {
@@ -12,15 +11,6 @@ public class MotorCycle extends Vehicle {
     public MotorCycle(int id, String name, int yearOfManufacture, double price, double engineSize, TypeOfMotorCycle typeOfMotorCycle, String listedBy) {
         super(id, name, yearOfManufacture, price, engineSize, listedBy);
         this.typeOfMotorCycle = typeOfMotorCycle;
-    }
-
-    public static boolean contains(int id, List<MotorCycle> items) {
-        for (Item item : items) {
-            if (item.getId() == id) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public TypeOfMotorCycle getTypeOfMotorCycle() {

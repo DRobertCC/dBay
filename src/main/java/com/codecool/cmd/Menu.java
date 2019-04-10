@@ -10,11 +10,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class Menu {
+class Menu {
 
     private static Dbay dbay; // Lehet statikus, hiszen csak egy lesz belőe per dbay. Így nem kell argumentumként átadni sem minden metódusnak.
 
-    public Menu() {
+    Menu() {
         List<User> users = new ArrayList<>();
         List<Item> items = new ArrayList<>();
 
@@ -30,16 +30,14 @@ public class Menu {
         dbay = new Dbay(users, items, currentItemId);
     }
 
-    public void handleMenu() {
+    void handleMenu() {
 
         String[] options = {
                 "Register",
                 "Log in",
                 "Show registered users",
-                "   Show cars",
-                "   Show motorcycles",
-                "   List new Car",
-                "   List new Motorcycle",
+                "Show list of available items",
+                "Add new item for sale",
                 "Buy an item",
                 "Log out"};
 
@@ -61,8 +59,8 @@ public class Menu {
         System.out.println(String.format("( %1s )  %-10s", "0", exitMessage));
     }
 
-    public void choose() throws InterruptedException {
-        int option = IO.readInteger("\nPlease enter a number", 0, 9);
+    void choose() throws InterruptedException {
+        int option = IO.readInteger("\nPlease enter a number", 0, 7);
         switch (option) {
             case 1:
                 register();
@@ -77,26 +75,36 @@ public class Menu {
                 IO.enterToContinue();
                 break;
             case 4:
-                printAvailableCars();
-                IO.enterToContinue();
+                int typeOfItems = IO.chooseTypeOfItems("\nWhat type of item do you want to see?");
+                switch (typeOfItems) {
+                    case 1:
+                        printAvailableCars();
+                        IO.enterToContinue();
+                        break;
+                    case 2:
+                        printAvailableMotorCycles();
+                        IO.enterToContinue();
+                        break;
+                }
                 break;
             case 5:
-                printAvailableMotorCycles();
-                IO.enterToContinue();
+                typeOfItems = IO.chooseTypeOfItems("\nWhat type of item do you want to list for sale?");
+                switch (typeOfItems) {
+                    case 1:
+                        listNewCar();
+                        IO.enterToContinue();
+                        break;
+                    case 2:
+                        listNewMotorCycle();
+                        IO.enterToContinue();
+                        break;
+                }
                 break;
             case 6:
-                listNewCar();
-                IO.enterToContinue();
-                break;
-            case 7:
-                listNewMotorCycle();
-                IO.enterToContinue();
-                break;
-            case 8:
                 buyItem();
                 IO.enterToContinue();
                 break;
-            case 9:
+            case 7:
                 logOut();
                 IO.enterToContinue();
                 break;
@@ -276,7 +284,7 @@ public class Menu {
     public void buyItem() {
         try {
             dbay.checkActiveUser();
-            int choose = IO.chooseItemToBuy();
+            int choose = IO.chooseTypeOfItems("\nWhat would like to buy?");
             int itemId = 0;
             List<Item> availableItems = new ArrayList<>();
 

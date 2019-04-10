@@ -110,8 +110,8 @@ public class Dbay {
         return motorCycles;
     }
 
-    public void addCar(String name, int yearOfManufacture, double price, double engineSize, int numberOfDoors, TypeOfCarBody typeOfCarBody, boolean isManual) throws AlreadyListedException {
-
+    public void addCar(String name, int yearOfManufacture, double price, double engineSize, int numberOfDoors, TypeOfCarBody typeOfCarBody, boolean isManual) throws AlreadyListedException, NotLoggedInException {
+        checkActiveUser();
         Car newCar = new Car(++currentItemId, name, yearOfManufacture, price, engineSize, numberOfDoors, typeOfCarBody, isManual, activeUser.getUserName());
 
         if (items.contains(newCar)) {
@@ -121,8 +121,8 @@ public class Dbay {
         items.add(newCar);
     }
 
-    public void addMotorCycle(String name, int yearOfManufacture, double price, double engineSize, TypeOfMotorCycle typeOfMotorCycle) throws AlreadyListedException {
-
+    public void addMotorCycle(String name, int yearOfManufacture, double price, double engineSize, TypeOfMotorCycle typeOfMotorCycle) throws AlreadyListedException, NotLoggedInException {
+        checkActiveUser();
         MotorCycle newMotorCycle = new MotorCycle(++currentItemId, name, yearOfManufacture, price, engineSize, typeOfMotorCycle, activeUser.getUserName());
         if (items.contains(newMotorCycle)) {
             throw new AlreadyListedException("We already have a Motorcycle with the same details listed by you!");

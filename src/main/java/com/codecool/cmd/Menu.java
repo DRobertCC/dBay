@@ -23,7 +23,7 @@ public class Menu {
 
         items.add(new Car(1, "BMW M5", 2012, 4990.0, 1.5, 5, TypeOfCarBody.valueOf("HACHBACK"), true, "Admin"));
         items.add(new Car(2, "Ford Mustang", 2000, 9999, 5, 2, TypeOfCarBody.valueOf("COUPE"), false, "Admin"));
-        //items.add(new MotorCycle(3, "Honda CBR", 1998, 5000, 1.2, TypeOfMotorCycle.valueOf("CRUISER"), "Admin"));
+        items.add(new MotorCycle(3, "Honda CBR", 1998, 5000, 1.2, TypeOfMotorCycle.valueOf("CRUISER"), "Admin"));
 
         int currentItemId = 3;
 
@@ -93,11 +93,7 @@ public class Menu {
                 IO.enterToContinue();
                 break;
             case 8:
-//                try {
-//                    dbay.buy();
-//                } catch (DbayException e) {
-//                    System.err.println("\n   " + e.getMessage());
-//                }
+                buyItem();
                 IO.enterToContinue();
                 break;
             case 9:
@@ -106,6 +102,10 @@ public class Menu {
                 break;
             case 0:
                 if (IO.getConfirmation("exit")) {
+                    try {
+                        dbay.logOut();
+                    } catch (NotLoggedInException e) {
+                    }
 //                dbay.updateUserList();
 //                dbay.updateNextItemId();
 //                dbay.updateCars();
@@ -274,7 +274,65 @@ public class Menu {
     }
 
     public void buyItem() {
+        try {
+            dbay.checkActiveUser();
+            int choose = IO.chooseItemToBuy();
+            int itemId = 0;
+            List<Item> availableItems = new ArrayList<>();
 
+            switch (choose) {
+                case 1:
+                    try {
+                        availableItems = dbay.getAvailableCars();
+                        printAvailableCars();
+                        itemId = IO.readInteger("\nPlease enter the id of the car you would like to buy", 1, 999999);
+                        if (!dbay.checkItemIdInItemList(availableItems, itemId)) {
+                            IO.printMessage("\nNo Car for sale with such id!");
+                            return;
+                        }
+                    } catch (NothingForSaleAtTheMomentException e) {
+                        System.err.println("\n   " + e.getMessage());
+                        return;
+                    }
+                    break;
+                case 2:
+                    try {
+                        availableItems = dbay.getAvailableMotorCycles();
+                        printAvailableMotorCycles();
+                        itemId = IO.readInteger("\nPlease enter the id of the motorcycle you would like to buy", 1, 999999);
+                        if (!dbay.checkItemIdInItemList(availableItems, itemId)) {
+                            IO.printMessage("\nNo Motorcycle for sale with such id!");
+                            return;
+                        }
+                    } catch (NothingForSaleAtTheMomentException e) {
+                        System.err.println("\n   " + e.getMessage());
+                        return;
+                    }
+                    break;
+            }
+
+            String itemName = "";
+            double itemPrice = 0;
+            for (Item item : availableItems) {
+                if (item.getId() == itemId) {
+                    itemName = item.getName();
+                    itemPrice = item.getPrice();
+                }
+            }
+
+            if (IO.getConfirmation("buy this item: " + itemName + " for €" + itemPrice)) {
+                try {
+                    dbay.buyItemByItemId(itemId);
+                    IO.printMessage("\n   Congratulations. the " + itemName + " is yours!");
+                } catch (DbayException e) {
+                    System.err.println("\n   " + e.getMessage());
+                }
+            } else {
+                IO.printMessage("Nothing bought.");
+            }
+        } catch (NotLoggedInException e) {
+            System.err.println("\n   " + e.getMessage());
+        }
     }
 
     public void logOut() {

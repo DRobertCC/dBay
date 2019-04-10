@@ -134,70 +134,11 @@ public class Dbay {
         return boughtItems;
     }
 
-/*
-    public void buy() throws DbayException {
-        //checkRegisteredUser(activeUser);
-        //checkActiveUser();
-        int choose = IO.chooseItemToBuy();
-        int maxId = 0;
-        int itemId = 0;
-        switch (choose) {
-            case 1:
-                printCars();
-                maxId = cars.get(cars.size() - 1).getId();
-                do {
-                    itemId = IO.readInteger("\nPlease enter the id of the car you would like to buy", 1, maxId);
-                } while (isThisCarAvailableToBuy(itemId));
-                break;
-            case 2:
-                printMotorCycles();
-                maxId = motorCycles.get(motorCycles.size() - 1).getId();
-                do {
-                    itemId = IO.readInteger("\nPlease enter the id of the motorcycle you would like to buy", 1, maxId);
-                } while (isThisMotorCycleAvailableToBuy(itemId));
-
-                break;
-        }
-
+    public void buyItemByItemId(int itemId) throws DbayException {
+        checkActiveUser();
         checkNotBought(itemId);
-
-        String itemName = "";
-        double itemPrice = 0;
-        switch (choose) {
-            case 1:
-                for (Car car : cars) {
-                    if (car.getId() == itemId) {
-                        itemName = car.getName();
-                        itemPrice = car.getPrice();
-                    }
-                }
-                break;
-            case 2:
-                for (MotorCycle motorCycle : motorCycles) {
-                    if (motorCycle.getId() == itemId) {
-                        itemName = motorCycle.getName();
-                        itemPrice = motorCycle.getPrice();
-                    }
-                }
-                break;
-        }
-
-        if (IO.getConfirmation("buy this item: " + itemName + " for €" + itemPrice)) {
-            boughtItems.put(itemId, new ItemBoughtInfo(activeUser, LocalDateTime.now())); // Ha eddig eljutott, akkor vásárolhat.
-            IO.printMessage("\n   Congratulations. the " + itemName + " is yours!");
-        } else {
-            IO.printMessage("Nothing bought.");
-        }
-*/
-
-//        for (Item item : items) {
-//            if ( item.getId().equals(itemId) ) {
-//                ;
-//            }
-//        }
-/*
+        boughtItems.put(itemId, new ItemBoughtInfo(activeUser, LocalDateTime.now()));
     }
-*/
 
     public void logOut() throws NotLoggedInException {
         if (activeUser != null) {
@@ -206,6 +147,17 @@ public class Dbay {
             throw new NotLoggedInException("Nobody is logged in!");
         }
     }
+
+    public String getActiveUserName() {
+        if (this.activeUser == null) {
+            return "-";
+        }
+        return this.activeUser.getUserName();
+    }
+
+//    public static int getcurrentItemId() {
+//        return currentItemId;
+//    }
 
     public void checkRegisteredUserByUserName(String userName) throws NotRegisteredException {
         boolean isRegistered = false;
@@ -225,35 +177,6 @@ public class Dbay {
         }
     }
 
-    public String getActiveUserName() {
-        if (this.activeUser == null) {
-            return "-";
-        }
-        return this.activeUser.getUserName();
-    }
-
-/*
-    private boolean isThisCarAvailableToBuy(int itemId) {
-        int i = 0;
-        while (i < cars.size()) {
-            if (cars.get(i).getId() == itemId) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isThisMotorCycleAvailableToBuy(int itemId) {
-        int i = 0;
-        while (i < motorCycles.size()) {
-            if (motorCycles.get(i).getId() == itemId) {
-                return true;
-            }
-        }
-        return false;
-    }
-*/
-
     private void checkNotBought(int itemId) throws AlreadyBoughtException {
         if (boughtItems.containsKey(itemId)) {
             ItemBoughtInfo info = boughtItems.get(itemId); // Az itemId-hez tarozó rekord letárolása. Ezáltal hozzáférek a fieldjeihez:
@@ -261,10 +184,20 @@ public class Dbay {
         }
     }
 
+    public boolean checkItemIdInItemList(List<Item> items,  int itemId) {
+        boolean result = false;
+        for (Item item : items) {
+            if (item.getId() == itemId) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
 //    public public void printNextId() {
 //        IO.printNextId(currentItemId);
-//    }
 
+//    }
 //    public void updateUserList() {
 //        XMLWriter.updateUserListInXML(users, "data/Users.xml", lastSavedUserId);
 //    }
@@ -279,10 +212,7 @@ public class Dbay {
 //
 //    public void updateNextItemId() {
 //        XMLWriter.updateCurrentItemIdInXML("data/Dbay.xml", currentItemId);
-//    }
 
-    public static int getcurrentItemId() {
-        return currentItemId;
-    }
+//    }
 }
 

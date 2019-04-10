@@ -1,9 +1,11 @@
 package com.codecool.cmd;
 
 
-import com.codecool.api.*;
+import com.codecool.api.Car;
+import com.codecool.api.Dbay;
+import com.codecool.api.Item;
+import com.codecool.api.User;
 import com.codecool.api.enums.TypeOfCarBody;
-import com.codecool.api.enums.TypeOfMotorCycle;
 import com.codecool.api.exeption.*;
 
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ public class Menu {
 
         items.add(new Car(1, "BMW M5", 2012, 4990.0, 1.5, 5, TypeOfCarBody.valueOf("HACHBACK"), true, "Admin"));
         items.add(new Car(2, "Ford Mustang", 2000, 9999, 5, 2, TypeOfCarBody.valueOf("COUPE"), false, "Admin"));
-        items.add(new MotorCycle(3, "Honda CBR", 1998, 5000, 1.2, TypeOfMotorCycle.valueOf("CRUISER"), "Admin"));
+        //items.add(new MotorCycle(3, "Honda CBR", 1998, 5000, 1.2, TypeOfMotorCycle.valueOf("CRUISER"), "Admin"));
 
         int currentIemId = 3;
 
@@ -117,7 +119,7 @@ public class Menu {
 //                dbay.updateNextItemId();
 //                dbay.updateCars();
 //                dbay.updateMotorCycles();
-                    System.out.println("See you later!");
+                    System.out.println("\nSee you later!");
                     System.exit(0);
                     break;
                 }

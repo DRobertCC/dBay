@@ -83,9 +83,10 @@ public class Dbay {
                 }
             }
         } else {
-            if (cars.isEmpty()) {
                 throw new NothingForSaleAtTheMomentException("Nothing for sale at the moment. Please check back later.");
-            }
+        }
+        if (cars.isEmpty()) {
+            throw new NothingForSaleAtTheMomentException("No Cars for sale at the moment. Please check back later.");
         }
         return cars;
     }
@@ -99,9 +100,10 @@ public class Dbay {
                 }
             }
         } else {
-            if (motorCycles.isEmpty()) {
                 throw new NothingForSaleAtTheMomentException("Nothing for sale at the moment. Please check back later.");
-            }
+        }
+        if (motorCycles.isEmpty()) {
+            throw new NothingForSaleAtTheMomentException("No MotorCycles for sale at the moment. Please check back later.");
         }
         return motorCycles;
     }

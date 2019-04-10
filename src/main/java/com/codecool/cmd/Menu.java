@@ -1,14 +1,13 @@
 package com.codecool.cmd;
 
 
-import com.codecool.api.Car;
-import com.codecool.api.Dbay;
-import com.codecool.api.Item;
-import com.codecool.api.User;
+import com.codecool.api.*;
 import com.codecool.api.enums.TypeOfCarBody;
+import com.codecool.api.enums.TypeOfMotorCycle;
 import com.codecool.api.exeption.*;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class Menu {
@@ -26,9 +25,9 @@ public class Menu {
         items.add(new Car(2, "Ford Mustang", 2000, 9999, 5, 2, TypeOfCarBody.valueOf("COUPE"), false, "Admin"));
         //items.add(new MotorCycle(3, "Honda CBR", 1998, 5000, 1.2, TypeOfMotorCycle.valueOf("CRUISER"), "Admin"));
 
-        int currentIemId = 3;
+        int currentItemId = 3;
 
-        dbay = new Dbay(users, items, currentIemId);
+        dbay = new Dbay(users, items, currentItemId);
     }
 
     public void handleMenu() {
@@ -44,7 +43,7 @@ public class Menu {
                 "Buy an item",
                 "Log out"};
 
-        printMenu("\n*** Welcome to dBay. The offline stuff marketplace. ***\n\n " + "           Main menu           Current user: " + dbay.getActiveUser(), options, "Exit program");
+        printMenu("\n*** Welcome to dBay. The offline stuff marketplace. ***\n\n " + "           Main menu           Current user: " + dbay.getActiveUserName(), options, "Exit program");
     }
 
     public void printMenu(String title, String[] listOptions, String exitMessage) {
@@ -86,19 +85,11 @@ public class Menu {
                 IO.enterToContinue();
                 break;
             case 6:
-//                try {
-//                    dbay.listNewCar();
-//                } catch (DbayException e) {
-//                    System.err.println("\n   " + e.getMessage());
-//                }
+                listNewCar();
                 IO.enterToContinue();
                 break;
             case 7:
-//                try {
-//                    dbay.listNewMotorCycle();
-//                } catch (DbayException e) {
-//                    System.err.println("\n   " + e.getMessage());
-//                }
+                listNewMotorCycle();
                 IO.enterToContinue();
                 break;
             case 8:
@@ -132,7 +123,10 @@ public class Menu {
         String userName;
         while (true) {
             boolean free = true;
-            userName = IO.readString("Username", "^[a-zA-Z0-9._]*", "Only the followings permitted: a-z A-Z 0-9 ._");
+            userName = IO.readString("Username (or q to cancel)", "^[a-zA-Z0-9._]*", "Only the followings permitted: a-z A-Z 0-9 ._");
+            if (userName.equals("q".toLowerCase())) {
+                return;
+            }
             try {
                 for (User user : dbay.getUsers()) {
                     if (user.getUserName().toLowerCase().equals(userName.toLowerCase())) {
@@ -169,12 +163,17 @@ public class Menu {
     public void logIn() {
         System.out.println("\nPlease give your login details");
         String userName = IO.readString("Username", "^[a-zA-Z0-9._]*", "Only the followings permitted: a-z A-Z 0-9 ._");
-        String password = IO.readString("Password", "(?=.*[a-z]).{6,}", "At least 6 lowercase characters."); // "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}"
-
         try {
-            dbay.logIn(userName, password);
-            System.out.println("\n   " + userName + " successfully logged in.");
-        } catch (NoSuchUserNamePasswordCombinationException e) {
+            dbay.checkRegisteredUserByUserName(userName);
+            String password = IO.readString("Password", "(?=.*[a-z]).{6,}", "At least 6 lowercase characters."); // "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}"
+
+            try {
+                dbay.logIn(userName, password);
+                System.out.println("\n   " + userName + " successfully logged in.");
+            } catch (NoSuchUserNamePasswordCombinationException e) {
+                System.err.println("\n   " + e.getMessage());
+            }
+        } catch (NotRegisteredException e) {
             System.err.println("\n   " + e.getMessage());
         }
     }
@@ -192,11 +191,13 @@ public class Menu {
     }
 
     public void printAvailableCars() {
-        String title = "                                                Available Cars";
-        String[] headerPositions = {"%6s", "%-36s", "%-16s", "%-10s", "%-11s", "%-8s", "%-10s", "%-7s"};
-        String[] headerTitles = {"id", "   Name", "Body Type", "Year", "Engine", "Doors", "Gearbox", " Price"};
         try {
             List<Item> cars = new ArrayList<>(dbay.getAvailableCars());
+
+            String title = "                                                Available Cars";
+            String[] headerPositions = {"%6s", "%-36s", "%-16s", "%-10s", "%-11s", "%-8s", "%-10s", "%-7s"};
+            String[] headerTitles = {"id", "   Name", "Body Type", "Year", "Engine", "Doors", "Gearbox", " Price"};
+
             IO.printItemByType(cars, title, headerPositions, headerTitles);
         } catch (NothingForSaleAtTheMomentException e) {
             System.err.println("\n   " + e.getMessage());
@@ -204,11 +205,13 @@ public class Menu {
     }
 
     public void printAvailableMotorCycles() {
-        String title = "                                         Available Motorcycles";
-        String[] headerPositions = {"%6s", "%-36s", "%-16s", "%-10s", "%-12s", "%-10s"};
-        String[] headerTitles = {"id", "   Name", "Type", "Year", "Engine", "Price"};
         try {
             List<Item> cars = new ArrayList<>(dbay.getAvailableMotorCycles());
+
+            String title = "                                         Available Motorcycles";
+            String[] headerPositions = {"%6s", "%-36s", "%-16s", "%-10s", "%-12s", "%-10s"};
+            String[] headerTitles = {"id", "   Name", "Type", "Year", "Engine", "Price"};
+
             IO.printItemByType(cars, title, headerPositions, headerTitles);
         } catch (NothingForSaleAtTheMomentException e) {
             System.err.println("\n   " + e.getMessage());
@@ -216,11 +219,58 @@ public class Menu {
     }
 
     public void listNewCar() {
+        try {
+            dbay.checkActiveUser();
+            IO.printMessage("\n\n    *** Listing a car for sale ***");
+            IO.printMessage("\nPlease give the following details:");
+            String name = IO.readString("Name (or q to cancel)", "^[a-zA-Z0-9. ]*", "Only the followings permitted: a-z A-Z . space");
+            if (name.equals("q".toLowerCase())) {
+                return;
+            }
+            int yearOfManufacture = IO.readInteger("Manufacturing year", 1900, Calendar.getInstance().get(Calendar.YEAR));
+            double price = IO.readDouble("Price", 0, 10000000);
+            double engineSize = IO.readDouble("Engine size", 0, 15);
+            int numberOfDoors = IO.readInteger("Number of doors", 2, 10);
+            TypeOfCarBody typeOfCarBody = IO.chooseTypeOfCarBody();
+            boolean isManual = IO.chooseIsManual();
 
+            try {
+                dbay.addCar(name, yearOfManufacture, price, engineSize, numberOfDoors, typeOfCarBody, isManual);
+                IO.printMessage("\n   " + name + " successfully added.");
+            } catch (AlreadyListedException e) {
+                System.err.println("\n   " + e.getMessage());
+            }
+
+        } catch (NotLoggedInException e) {
+            System.err.println("\n   " + e.getMessage());
+        }
     }
 
     public void listNewMotorCycle() {
+        try {
+            dbay.checkActiveUser();
+            IO.printMessage("\n *** Listing a motorcycle for sale ***");
+            IO.printMessage("\nPlease give the following details:");
+            String name = IO.readString("Name (or q to cancel)", "^[a-zA-Z0-9. ]*", "Only the followings permitted: a-z A-Z . space");
+            if (name.equals("q".toLowerCase())) {
+                return;
+            }
+            int yearOfManufacture = IO.readInteger("Manufacturing year", 1900, Calendar.getInstance().get(Calendar.YEAR));
+            double price = IO.readDouble("Price", 0, 10000000);
+            double engineSize = IO.readDouble("Engine size", 0, 10);
+            TypeOfMotorCycle typeOfMotorCycle = IO.chooseTypeOfMotorCycle();
+            String listedBy = "Admin"; //activeUser.getUserName();
 
+            try {
+                dbay.addMotorCycle(name, yearOfManufacture, price, engineSize, typeOfMotorCycle);
+                IO.printMessage("\n   " + name + " successfully added.");
+            } catch (AlreadyListedException e) {
+                System.err.println("\n   " + e.getMessage());
+            }
+
+        } catch (NotLoggedInException e) {
+            System.err.println("\n   " + e.getMessage());
+        }
     }
 
     public void buyItem() {
@@ -228,7 +278,7 @@ public class Menu {
     }
 
     public void logOut() {
-        if (dbay.getActiveUser().equals("-")) {
+        if (dbay.getActiveUserName().equals("-")) {
             System.err.println("\n   Nobody is logged in!");
         } else {
             if (IO.getConfirmation("logout")) {

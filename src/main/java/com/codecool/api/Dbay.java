@@ -3,10 +3,12 @@ package com.codecool.api;
 import com.codecool.api.enums.TypeOfCarBody;
 import com.codecool.api.enums.TypeOfMotorCycle;
 import com.codecool.api.exeption.*;
-import com.codecool.cmd.IO;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Dbay {
 
@@ -22,7 +24,7 @@ public class Dbay {
         }
     }
 
-    private static int currentIemId = 0;
+    private static int currentItemId = 0;
 //    private static int lastSavedUserId;
 //    private static int lastSavedItemId;
 
@@ -31,15 +33,15 @@ public class Dbay {
     private Map<Integer, ItemBoughtInfo> boughtItems = new HashMap<>(); // Which Item (id) was bought by which User (userName) and when.
     private User activeUser = null; // will change after login
 
-    public Dbay(List<User> users, List<Item> items, int currentIemId) {
+    public Dbay(List<User> users, List<Item> items, int id) {
         this.users = users;
         this.items = items;
-        currentIemId = currentIemId;
+        currentItemId = id;
     }
 
 //    Dbay() {
-//        currentIemId = XMLLoader.getnextItemId("data/Dbay.xml");
-//        lastSavedItemId = currentIemId;
+//        currentItemId = XMLLoader.getnextItemId("data/Dbay.xml");
+//        lastSavedItemId = currentItemId;
 //        users = new ArrayList<>(XMLLoader.getUsers("data/Users.xml"));
 //        lastSavedUserId = users.size();
 //        cars = new ArrayList<>(XMLLoader.getCars("data/Dbay.xml"));
@@ -62,7 +64,7 @@ public class Dbay {
             }
         }
         if (activeUser == null) {
-            throw new NoSuchUserNamePasswordCombinationException("Wrong username and/or password");
+            throw new NoSuchUserNamePasswordCombinationException("Wrong username and password combination");
         }
     }
 
@@ -83,7 +85,7 @@ public class Dbay {
                 }
             }
         } else {
-                throw new NothingForSaleAtTheMomentException("Nothing for sale at the moment. Please check back later.");
+            throw new NothingForSaleAtTheMomentException("Nothing for sale at the moment. Please check back later.");
         }
         if (cars.isEmpty()) {
             throw new NothingForSaleAtTheMomentException("No Cars for sale at the moment. Please check back later.");
@@ -100,7 +102,7 @@ public class Dbay {
                 }
             }
         } else {
-                throw new NothingForSaleAtTheMomentException("Nothing for sale at the moment. Please check back later.");
+            throw new NothingForSaleAtTheMomentException("Nothing for sale at the moment. Please check back later.");
         }
         if (motorCycles.isEmpty()) {
             throw new NothingForSaleAtTheMomentException("No MotorCycles for sale at the moment. Please check back later.");
@@ -108,42 +110,24 @@ public class Dbay {
         return motorCycles;
     }
 
-    public void listNewCar() throws DbayException {
-        checkActiveUser();
-        IO.printMessage("\n\n    *** Listing a car for sale ***");
-        IO.printMessage("\nPlease give the following details:");
-        String name = IO.readString("Name", "^[a-zA-Z0-9. ]*", "Only the followings permitted: a-z A-Z . space");
-        int yearOfManufacture = IO.readInteger("Manufacturing year", 1900, Calendar.getInstance().get(Calendar.YEAR));
-        double price = IO.readDouble("Price", 0, 10000000);
-        double engineSize = IO.readDouble("Engine size", 0, 15);
-        int numberOfDoors = IO.readInteger("Number of doors", 2, 10);
-        TypeOfCarBody typeOfCarBody = IO.chooseTypeOfCarBody();
-        boolean isManual = IO.chooseIsManual();
-        String listedBy = "Admin"; //activeUser.getUserName();
-        Car newCar = new Car(++currentIemId, name, yearOfManufacture, price, engineSize, numberOfDoors, typeOfCarBody, isManual, listedBy);
+    public void addCar(String name, int yearOfManufacture, double price, double engineSize, int numberOfDoors, TypeOfCarBody typeOfCarBody, boolean isManual) throws AlreadyListedException {
+
+        Car newCar = new Car(++currentItemId, name, yearOfManufacture, price, engineSize, numberOfDoors, typeOfCarBody, isManual, activeUser.getUserName());
+
         if (items.contains(newCar)) {
-            throw new AlreadyListedException("We already have a car with the same details!");
+            --currentItemId;
+            throw new AlreadyListedException("We already have a Car with the same details listed by you!");
         }
         items.add(newCar);
-        IO.printMessage("\n   " + newCar.getName() + " successfully added.");
     }
 
-    public void listNewMotorCycle() throws DbayException {
-        checkActiveUser();
-        IO.printMessage("\n *** Listing a motorcycle for sale ***");
-        IO.printMessage("\nPlease give the following details:");
-        String name = IO.readString("Name", "^[a-zA-Z0-9. ]*", "Only the followings permitted: a-z A-Z . space");
-        int yearOfManufacture = IO.readInteger("Manufacturing year", 1900, Calendar.getInstance().get(Calendar.YEAR));
-        double price = IO.readDouble("Price", 0, 10000000);
-        double engineSize = IO.readDouble("Engine size", 0, 15);
-        TypeOfMotorCycle typeOfMotorCycle = IO.chooseTypeOfMotorCycle();
-        String listedBy = "Admin"; //activeUser.getUserName();
-        MotorCycle newMotorCycle = new MotorCycle(++currentIemId, name, yearOfManufacture, price, engineSize, typeOfMotorCycle, listedBy);
+    public void addMotorCycle(String name, int yearOfManufacture, double price, double engineSize, TypeOfMotorCycle typeOfMotorCycle) throws AlreadyListedException {
+
+        MotorCycle newMotorCycle = new MotorCycle(++currentItemId, name, yearOfManufacture, price, engineSize, typeOfMotorCycle, activeUser.getUserName());
         if (items.contains(newMotorCycle)) {
-            throw new AlreadyListedException("We already have a bike with the same details!");
+            throw new AlreadyListedException("We already have a Motorcycle with the same details listed by you!");
         }
         items.add(newMotorCycle);
-        IO.printMessage("   " + newMotorCycle.getName() + " successfully added.");
     }
 
     public Map<Integer, ItemBoughtInfo> getBoughtItems() {
@@ -223,19 +207,25 @@ public class Dbay {
         }
     }
 
-    private void checkRegisteredUser(User user) throws NotRegisteredException {
-        if (!users.contains(user)) {
-            throw new NotRegisteredException("Please register first.");
+    public void checkRegisteredUserByUserName(String userName) throws NotRegisteredException {
+        boolean isRegistered = false;
+        for (User user : users) {
+            if (user.getUserName().toLowerCase().equals(userName.toLowerCase())) {
+                isRegistered = true;
+            }
+        }
+        if (!isRegistered) {
+            throw new NotRegisteredException("No such username! Please register first.");
         }
     }
 
-    private void checkActiveUser() throws NotLoggedInException {
+    public void checkActiveUser() throws NotLoggedInException {
         if (activeUser == null) {
             throw new NotLoggedInException("You must be logged in to post new listings or buy anything!");
         }
     }
 
-    public String getActiveUser() {
+    public String getActiveUserName() {
         if (this.activeUser == null) {
             return "-";
         }
@@ -272,7 +262,7 @@ public class Dbay {
     }
 
 //    public public void printNextId() {
-//        IO.printNextId(currentIemId);
+//        IO.printNextId(currentItemId);
 //    }
 
 //    public void updateUserList() {
@@ -288,10 +278,11 @@ public class Dbay {
 //    }
 //
 //    public void updateNextItemId() {
-//        XMLWriter.updateCurrentItemIdInXML("data/Dbay.xml", currentIemId);
+//        XMLWriter.updateCurrentItemIdInXML("data/Dbay.xml", currentItemId);
 //    }
 
-    public static int getCurrentIemId() {
-        return currentIemId;
+    public static int getcurrentItemId() {
+        return currentItemId;
     }
 }
+

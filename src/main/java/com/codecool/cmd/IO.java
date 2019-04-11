@@ -52,12 +52,12 @@ public abstract class IO {
 
     static void enterToContinue() throws InterruptedException {
         Thread.sleep(100);
-        System.err.println( "\nPress enter to continue..." );
+        System.err.println("\nPress enter to continue...");
         String input = reader.nextLine();
     }
 
     static boolean getConfirmation(String command) {
-        String input = IO.readString( "\nAre you sure you want to " + command + "? (y or n)", "^[yn]", "Only type y or n");
+        String input = IO.readString("\nAre you sure you want to " + command + "? (y or n)", "^[yn]", "Only type y or n");
         return input.equals("y");
     }
 
@@ -107,8 +107,7 @@ public abstract class IO {
                 if (input.matches(regEx)) {
                     return input;
                 } else {
-                    System.err.println(
-                            invalidFormMessage + " Please try again.");
+                    System.err.println(invalidFormMessage + " Please try again.");
                 }
             } catch (Exception e) {
                 System.err.println("   You haven't written a proper data.");

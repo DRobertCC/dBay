@@ -133,33 +133,25 @@ class Menu {
         String userName;
         while (true) {
             boolean free = true;
-            userName = IO.readString("Username (or q to cancel)", "^[a-zA-Z0-9._]*", "Only the followings permitted: a-z A-Z 0-9 ._");
+            userName = IO.readString("Username (or q to cancel)", "(^[a-zA-Z0-9._]).{3,}", "   Only the followings permitted (at least 3 char): a-z A-Z 0-9 ._");
             if (userName.equals("q".toLowerCase())) {
                 return;
             }
-            try {
-                for (User user : dbay.getUsers()) {
-                    if (user.getUserName().toLowerCase().equals(userName.toLowerCase())) {
-                        free = false;
-                        System.err.println("\n   " + "\n   This username is already registered. Choose another one.");
-                    }
-                }
-            } catch (NoRegisteredUsersException e) {
-                System.err.println("\n   " + e.getMessage());
-            }
-            if (free) {
+            if (!dbay.isRegisteredUser(userName)) {
                 break;
+            } else {
+                System.err.println("   This username is already registered. Choose another one!\n");
             }
         }
-
-//    String password = IO.readString("Password", "(?=.*[a-z]).{6,}", "At least 6 lowercase characters.");
-//    String fullName = IO.readString("Full name", "^[a-zA-Z ]*", "Only the followings permitted: a-z A-Z space");
-//    String email = IO.readString("Email address", "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", "");
-//    String country = IO.readString("Country of residence", "^[a-zA-Z ]*", "Only the followings permitted: a-z A-Z space");
-        String password = IO.readString("Password", "^[a-zA-Z0-9._]*", "At least 6 lowercase characters.");
-        String fullName = IO.readString("Full name", "^[a-zA-Z0-9._]*", "Only the followings permitted: a-z A-Z space");
-        String email = IO.readString("Email address", "^[a-zA-Z0-9._]*", "");
-        String country = IO.readString("Country of residence", "^[a-zA-Z0-9._]*", "Only the followings permitted: a-z A-Z space");
+// Real life validations:
+    String password = IO.readString("Password", "(^[a-z]).{6,}", "   At least 6 lowercase characters.");
+    String fullName = IO.readString("Full name", "(^[a-zA-Z ]).{3,}", "   Only the followings permitted (at least 3 char): a-z A-Z space.");
+    String email = IO.readString("Email address", "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", "Invalid email format.");
+    String country = IO.readString("Country of residence", "(^[a-zA-Z0-9._]).{2,}", "   Only the followings permitted (at least 2 char): a-z A-Z space.");
+//        String password = IO.readString("Password", "^[a-zA-Z0-9._]*", "   At least 6 lowercase characters.");
+//        String fullName = IO.readString("Full name", "(?=.*[a-zA-Z ]).{3,}", "   Only the followings permitted: a-z A-Z space");
+//        String email = IO.readString("Email address", "^[a-zA-Z0-9._]*", "");
+//        String country = IO.readString("Country of residence", "(?=.*[a-zA-Z0-9._]).{2,}", "   Only the followings permitted: a-z A-Z space");
         User newUser = new User(userName, password, fullName, email, country);
 
         try {
@@ -172,10 +164,9 @@ class Menu {
 
     public void logIn() {
         System.out.println("\nPlease give your login details");
-        String userName = IO.readString("Username", "^[a-zA-Z0-9._]*", "Only the followings permitted: a-z A-Z 0-9 ._");
-        try {
-            dbay.checkRegisteredUserByUserName(userName);
-            String password = IO.readString("Password", "(?=.*[a-z]).{6,}", "At least 6 lowercase characters."); // "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}"
+        String userName = IO.readString("Username", "^[a-zA-Z0-9._]*", "    Only the followings permitted: a-z A-Z 0-9 ._");
+        if (dbay.isRegisteredUser(userName)) {
+            String password = IO.readString("Password", "(?=.*[a-z]).{6,}", "   At least 6 lowercase characters."); // "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}"
 
             try {
                 dbay.logIn(userName, password);
@@ -183,8 +174,8 @@ class Menu {
             } catch (NoSuchUserNamePasswordCombinationException e) {
                 System.err.println("\n   " + e.getMessage());
             }
-        } catch (NotRegisteredException e) {
-            System.err.println("\n   " + e.getMessage());
+        } else {
+            System.err.println("\n   No such username! Please register first.");
         }
     }
 

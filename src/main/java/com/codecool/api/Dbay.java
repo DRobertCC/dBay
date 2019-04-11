@@ -204,16 +204,14 @@ public class Dbay {
 //        return currentItemId;
 //    }
 
-    public void checkRegisteredUserByUserName(String userName) throws NotRegisteredException {
+    public boolean isRegisteredUser(String userName) {
         boolean isRegistered = false;
         for (User user : users) {
             if (user.getUserName().toLowerCase().equals(userName.toLowerCase())) {
                 isRegistered = true;
             }
         }
-        if (!isRegistered) {
-            throw new NotRegisteredException("No such username! Please register first.");
-        }
+        return isRegistered;
     }
 
     public void checkActiveUser() throws NotLoggedInException {

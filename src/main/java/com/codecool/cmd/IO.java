@@ -34,15 +34,15 @@ public abstract class IO {
         }
     }
 
-    static void printItemByType(List<Item> items, String title, String[] headerPositions, String[] headerTitles) {
+    static void printItemList(List<Item> items, String title, String[] headerPositions, String[] headerTitles) {
         System.out.println(title);
         System.out.println();
         for (int i = 0; i < headerTitles.length; i++) {
             System.out.print(String.format(headerPositions[i], headerTitles[i]));
         }
         System.out.println();
-        for (Item user : items) {
-            System.out.println(user);
+        for (Item item : items) {
+            System.out.println(item);
         }
     }
 

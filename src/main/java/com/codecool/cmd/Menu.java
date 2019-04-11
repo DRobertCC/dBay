@@ -75,7 +75,7 @@ class Menu {
                 IO.enterToContinue();
                 break;
             case 4:
-                int typeOfItems = IO.chooseTypeOfItems("\nWhat type of item do you want to see?");
+                int typeOfItems = IO.chooseTypeOfItems("\nWhat type of items are xou looking for?");
                 switch (typeOfItems) {
                     case 1:
                         printAvailableCars();
@@ -206,7 +206,7 @@ class Menu {
             String[] headerPositions = {"%6s", "%-36s", "%-16s", "%-10s", "%-11s", "%-8s", "%-10s", "%-7s"};
             String[] headerTitles = {"id", "   Name", "Body Type", "Year", "Engine", "Doors", "Gearbox", " Price"};
 
-            IO.printItemByType(cars, title, headerPositions, headerTitles);
+            IO.printItemList(cars, title, headerPositions, headerTitles);
         } catch (NothingForSaleAtTheMomentException e) {
             System.err.println("\n   " + e.getMessage());
         }
@@ -214,13 +214,13 @@ class Menu {
 
     public void printAvailableMotorCycles() {
         try {
-            List<Item> cars = new ArrayList<>(dbay.getAvailableMotorCycles());
+            List<Item> motorCycles = new ArrayList<>(dbay.getAvailableMotorCycles());
 
             String title = "                                         Available Motorcycles";
             String[] headerPositions = {"%6s", "%-36s", "%-16s", "%-10s", "%-12s", "%-10s"};
             String[] headerTitles = {"id", "   Name", "Type", "Year", "Engine", "Price"};
 
-            IO.printItemByType(cars, title, headerPositions, headerTitles);
+            IO.printItemList(motorCycles, title, headerPositions, headerTitles);
         } catch (NothingForSaleAtTheMomentException e) {
             System.err.println("\n   " + e.getMessage());
         }

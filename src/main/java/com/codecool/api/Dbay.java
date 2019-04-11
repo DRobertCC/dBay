@@ -31,6 +31,7 @@ public class Dbay {
     private List<User> users;
     private List<Item> items;
     private Map<Integer, ItemBoughtInfo> boughtItems = new HashMap<>(); // Which Item (id) was bought by which User (userName) and when.
+
     private User activeUser = null; // will change after login
 
     public Dbay(List<User> users, List<Item> items, int id) {

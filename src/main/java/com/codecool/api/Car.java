@@ -4,7 +4,7 @@ import com.codecool.api.enums.TypeOfCarBody;
 
 import java.util.Objects;
 
-public class Car extends Vehicle{
+public class Car extends Vehicle {
 
     private int numberOfDoors;
     private TypeOfCarBody typeOfCarBody;

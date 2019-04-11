@@ -2,7 +2,7 @@
 
 ## Description
 
-In this app people can view listed for sale items (cars, motorbikes). Registered users can post new listings, buy items.
+In this app people can view listed for sale items (cars, motorbikes, etc.). Registered users can post new listings, buy items.
 
 ## Compilation and Execution
 

@@ -57,7 +57,7 @@ public abstract class IO {
     }
 
     static boolean getConfirmation(String command) {
-        String input = IO.readString( "\nAre you sure you want to " + command + "? (y or n) ", "^[yn]", "Only type y or n");
+        String input = IO.readString( "\nAre you sure you want to " + command + "? (y or n)", "^[yn]", "Only type y or n");
         return input.equals("y");
     }
 

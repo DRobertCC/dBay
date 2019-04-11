@@ -1,8 +1,9 @@
 package com.codecool.api;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class User {
+public class User implements Serializable {
 
     private String userName;
     private String password;

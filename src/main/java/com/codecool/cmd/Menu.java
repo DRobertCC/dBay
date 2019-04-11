@@ -18,16 +18,17 @@ class Menu {
         List<User> users = new ArrayList<>();
         List<Item> items = new ArrayList<>();
 
+/*
         users.add(new User("Admin", "kecske", "John Hopkins", "iaia@mail.com", "Italy"));
         users.add(new User("Joe", "kecske", "Mekk Elek", "johny@mail.com", "UK"));
 
         items.add(new Car(1, "BMW M5", 2012, 4990.0, 1.5, 5, TypeOfCarBody.valueOf("HACHBACK"), true, "Admin"));
         items.add(new Car(2, "Ford Mustang", 2000, 9999, 5, 2, TypeOfCarBody.valueOf("COUPE"), false, "Admin"));
         items.add(new MotorCycle(3, "Honda CBR", 1998, 5000, 1.2, TypeOfMotorCycle.valueOf("CRUISER"), "Admin"));
-
         int currentItemId = 3;
+*/
 
-        dbay = new Dbay(users, items, currentItemId);
+        dbay = new Dbay("data/Dbay");
     }
 
     void handleMenu() {
@@ -75,7 +76,7 @@ class Menu {
                 IO.enterToContinue();
                 break;
             case 4:
-                int typeOfItems = IO.chooseTypeOfItems("\nWhat type of items are xou looking for?");
+                int typeOfItems = IO.chooseTypeOfItems("\nWhat type of items are you looking for?");
                 switch (typeOfItems) {
                     case 1:
                         printAvailableCars();
@@ -118,6 +119,7 @@ class Menu {
 //                dbay.updateNextItemId();
 //                dbay.updateCars();
 //                dbay.updateMotorCycles();
+                    dbay.serializeDatabase();
                     System.out.println("\nSee you later!");
                     System.exit(0);
                     break;

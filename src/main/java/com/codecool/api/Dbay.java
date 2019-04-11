@@ -3,7 +3,9 @@ package com.codecool.api;
 import com.codecool.api.enums.TypeOfCarBody;
 import com.codecool.api.enums.TypeOfMotorCycle;
 import com.codecool.api.exeption.*;
+import com.codecool.cmd.IO;
 
+import java.io.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,10 +14,9 @@ import java.util.Map;
 
 public class Dbay {
 
-    public static class ItemBoughtInfo { // Inner, rejtett osztály, csak itt érhető el.
+    public static class ItemBoughtInfo implements Serializable{ // Inner, rejtett osztály, csak itt érhető el.
 
         User user;
-
         LocalDateTime date;
 
         ItemBoughtInfo(User user, LocalDateTime date) {
@@ -28,16 +29,16 @@ public class Dbay {
 //    private static int lastSavedUserId;
 //    private static int lastSavedItemId;
 
-    private List<User> users;
-    private List<Item> items;
+    private List<User> users = new ArrayList<>();
+    private List<Item> items = new ArrayList<>();
     private Map<Integer, ItemBoughtInfo> boughtItems = new HashMap<>(); // Which Item (id) was bought by which User (userName) and when.
 
     private User activeUser = null; // will change after login
+    private String databasePath;
 
-    public Dbay(List<User> users, List<Item> items, int id) {
-        this.users = users;
-        this.items = items;
-        currentItemId = id;
+    public Dbay(String databasePath) {
+        this.databasePath = databasePath;
+        deSerializeDatabase();
     }
 
 //    Dbay() {
@@ -49,13 +50,56 @@ public class Dbay {
 //        motorCycles = new ArrayList<>(XMLLoader.getMotorCycles("data/Dbay.xml"));
 //    }
 
+    public void serializeDatabase() {
+        try {
+            //Saving of object in a file
+            FileOutputStream file = new FileOutputStream(databasePath);
+            ObjectOutputStream out = new ObjectOutputStream(file);
+
+            // Method for serialization of objects
+            out.writeObject(currentItemId);
+            out.writeObject(users);
+            out.writeObject(items);
+            out.writeObject(boughtItems);
+
+            out.close();
+            file.close();
+
+            IO.printMessage("\nDatabase successfully saved to " + databasePath);
+
+        } catch (IOException e) {
+            System.err.println("\n   " + e.getMessage());
+        }
+    }
+
+    private void deSerializeDatabase() {
+        try {
+            // Reading the object from a file
+            FileInputStream file = new FileInputStream(databasePath);
+            ObjectInputStream in = new ObjectInputStream(file);
+
+            // Method for deserialization of object
+            currentItemId = (int) in.readObject();
+            users = (List<User>) in.readObject();
+            items = (List<Item>) in.readObject();
+            boughtItems = (Map<Integer, ItemBoughtInfo>) in.readObject();
+
+            in.close();
+            file.close();
+
+            IO.printMessage("\nDatabase successfully loaded from " + databasePath);
+
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("\n   " + e.getMessage());
+        }
+    }
+
     public void registerNewUser(User user) throws AlreadyRegisteredException {
         if (users.contains(user)) {
             throw new AlreadyRegisteredException("Already registered");
         }
         users.add(user);
     }
-
 
     public void logIn(String userName, String password) throws NoSuchUserNamePasswordCombinationException {
         for (User user : users) {
@@ -185,7 +229,7 @@ public class Dbay {
         }
     }
 
-    public boolean checkItemIdInItemList(List<Item> items,  int itemId) {
+    public boolean checkItemIdInItemList(List<Item> items, int itemId) {
         boolean result = false;
         for (Item item : items) {
             if (item.getId() == itemId) {

@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Dbay {
+public abstract class Dbay {
 
     public static class ItemBoughtInfo implements Serializable { // Inner, rejtett osztály, csak itt érhető el.
 
@@ -98,7 +98,7 @@ public class Dbay {
         }
     }
 
-    public void registerNewUser(User user) throws AlreadyRegisteredException {
+    public void registerNewUser(User user) throws DbayException {
         if (users.contains(user)) {
             throw new AlreadyRegisteredException("Already registered");
         }

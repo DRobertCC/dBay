@@ -39,11 +39,15 @@ public class User implements Serializable {
         this.boughtItems.add(itemId);
     }
 
+    public String getCountry() {
+        return country;
+    }
+
     /*    @Override
-                public boolean equals(Object obj) {     // Az .equals() alapesetben igy néz ki:
-                    return this == obj;   // Ez csak akkor igaz, ha mindkettő ugyanaz a példány / azonos memóriacímen.
-                }
-            */
+                    public boolean equals(Object obj) {     // Az .equals() alapesetben igy néz ki:
+                        return this == obj;   // Ez csak akkor igaz, ha mindkettő ugyanaz a példány / azonos memóriacímen.
+                    }
+                */
 // Alt+Ins - equals() and hashCode():
     @Override          // Override-olom az .equals()-t, hogy érték szerint hasonlítson, és ne referencia szerint.
     public boolean equals(Object o) {

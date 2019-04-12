@@ -27,7 +27,7 @@ class Menu {
 //        int currentItemId = 3;
 //        dbay = new Dbay(users, items, currentItemId);
 //
-        dbay = new Dbay("data/Dbay.dat");
+        dbay = new DbayCountry("data/Dbay.dat", "UK");
     }
 
     void handleMenu() {
@@ -166,10 +166,12 @@ class Menu {
 
         try {
             dbay.registerNewUser(newUser);
-        } catch (AlreadyRegisteredException e) {
+            System.out.println("\n   " + newUser.getUserName() + " successfully registered.");
+        } catch (NotAvailableInYourCountryException e) {
+            System.err.println(e.getMessage());
+        } catch (DbayException e) {
             System.err.println(e.getMessage() + ": " + newUser.getUserName());
         }
-        System.out.println("\n   " + newUser.getUserName() + " successfully registered.");
     }
 
     public void logIn() {

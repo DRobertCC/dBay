@@ -1,6 +1,8 @@
 package com.codecool.api;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class User implements Serializable {
@@ -10,6 +12,7 @@ public class User implements Serializable {
     private String fullName;
     private String email;
     private String country;
+    private List<Integer> boughtItems;
 
     public User(String userName, String password, String fullName, String email, String country) {
         this.userName = userName;
@@ -17,6 +20,7 @@ public class User implements Serializable {
         this.fullName = fullName;
         this.email = email;
         this.country = country;
+        boughtItems = new ArrayList<>(); // The User bought what items.
     }
 
     public String getUserName() {
@@ -27,11 +31,19 @@ public class User implements Serializable {
         return password;
     }
 
+    public List<Integer> getBoughtItems() {
+        return boughtItems;
+    }
+
+    public void addItemIdToBoughtItems(int itemId) {
+        this.boughtItems.add(itemId);
+    }
+
     /*    @Override
-            public boolean equals(Object obj) {     // Az .equals() alapesetben igy néz ki:
-                return this == obj;   // Ez csak akkor igaz, ha mindkettő ugyanaz a példány / azonos memóriacímen.
-            }
-        */
+                public boolean equals(Object obj) {     // Az .equals() alapesetben igy néz ki:
+                    return this == obj;   // Ez csak akkor igaz, ha mindkettő ugyanaz a példány / azonos memóriacímen.
+                }
+            */
 // Alt+Ins - equals() and hashCode():
     @Override          // Override-olom az .equals()-t, hogy érték szerint hasonlítson, és ne referencia szerint.
     public boolean equals(Object o) {

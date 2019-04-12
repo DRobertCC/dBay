@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class Dbay {
 
-    public static class ItemBoughtInfo implements Serializable{ // Inner, rejtett osztály, csak itt érhető el.
+    public static class ItemBoughtInfo implements Serializable { // Inner, rejtett osztály, csak itt érhető el.
 
         User user;
         LocalDateTime date;
@@ -26,8 +26,6 @@ public class Dbay {
     }
 
     private static int currentItemId = 0;
-//    private static int lastSavedUserId;
-//    private static int lastSavedItemId;
 
     private List<User> users = new ArrayList<>();
     private List<Item> items = new ArrayList<>();
@@ -39,6 +37,12 @@ public class Dbay {
     public Dbay(String databasePath) {
         this.databasePath = databasePath;
         deSerializeDatabase();
+    }
+
+    public Dbay(List<User> users, List<Item> items, int id) {
+        this.users = users;
+        this.items = items;
+        currentItemId = id;
     }
 
 //    Dbay() {
@@ -53,7 +57,7 @@ public class Dbay {
     public void serializeDatabase() {
         try {
             //Saving of object in a file
-            FileOutputStream file = new FileOutputStream(databasePath);
+            FileOutputStream file = new FileOutputStream(databasePath); //"data/Dbay.dat"
             ObjectOutputStream out = new ObjectOutputStream(file);
 
             // Method for serialization of objects
@@ -183,6 +187,25 @@ public class Dbay {
         checkActiveUser();
         checkNotBought(itemId);
         boughtItems.put(itemId, new ItemBoughtInfo(activeUser, LocalDateTime.now()));
+        activeUser.addItemIdToBoughtItems(itemId);
+    }
+
+    public List<Item> getBoughtItemsByCurrentUser() throws NoSuchItemException, NotLoggedInException {
+        checkActiveUser();
+        List<Item> result = new ArrayList<>();
+        List<Integer> boughtItems = activeUser.getBoughtItems();
+        if (boughtItems.isEmpty()) {
+            throw new NoSuchItemException("No items yet.");
+        } else {
+            for (int itemId : boughtItems) {
+                for (Item item : items) {
+                    if (item.getId() == itemId) {
+                        result.add(item);
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     public void logOut() throws NotLoggedInException {

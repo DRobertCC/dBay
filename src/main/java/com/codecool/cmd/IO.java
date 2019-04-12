@@ -52,7 +52,7 @@ public abstract class IO {
 
     static void enterToContinue() throws InterruptedException {
         Thread.sleep(100);
-        System.err.println("\nPress enter to continue...");
+        System.out.println("\nPress enter to continue...");
         String input = reader.nextLine();
     }
 

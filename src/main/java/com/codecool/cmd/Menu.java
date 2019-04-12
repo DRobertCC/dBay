@@ -28,7 +28,7 @@ class Menu {
         int currentItemId = 3;
 */
 
-        dbay = new Dbay("data/Dbay");
+        dbay = new Dbay("data/Dbay.dat");
     }
 
     void handleMenu() {
@@ -89,16 +89,22 @@ class Menu {
                 }
                 break;
             case 5:
-                typeOfItems = IO.chooseTypeOfItems("\nWhat type of item do you want to list for sale?");
-                switch (typeOfItems) {
-                    case 1:
-                        listNewCar();
-                        IO.enterToContinue();
-                        break;
-                    case 2:
-                        listNewMotorCycle();
-                        IO.enterToContinue();
-                        break;
+                try {
+                    dbay.checkActiveUser();
+                    typeOfItems = IO.chooseTypeOfItems("\nWhat type of item do you want to list for sale?");
+                    switch (typeOfItems) {
+                        case 1:
+                            listNewCar();
+                            IO.enterToContinue();
+                            break;
+                        case 2:
+                            listNewMotorCycle();
+                            IO.enterToContinue();
+                            break;
+                    }
+                } catch (NotLoggedInException e) {
+                    System.err.println("\n   " + e.getMessage());
+                    IO.enterToContinue();
                 }
                 break;
             case 6:
@@ -133,7 +139,7 @@ class Menu {
         String userName;
         while (true) {
             boolean free = true;
-            userName = IO.readString("Username (or q to cancel)", "(^[a-zA-Z0-9._]).{3,}", "   Only the followings permitted (at least 3 char): a-z A-Z 0-9 ._");
+            userName = IO.readString("Username (or q to cancel)", "(^[a-zA-Z0-9._]).{0,}", "   Only the followings permitted: a-z A-Z 0-9 ._");
             if (userName.equals("q".toLowerCase())) {
                 return;
             }
@@ -144,11 +150,11 @@ class Menu {
             }
         }
 // Real life validations:
-    String password = IO.readString("Password", "(^[a-z]).{6,}", "   At least 6 lowercase characters.");
-    String fullName = IO.readString("Full name", "(^[a-zA-Z ]).{3,}", "   Only the followings permitted (at least 3 char): a-z A-Z space.");
-    String email = IO.readString("Email address", "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", "Invalid email format.");
-    String country = IO.readString("Country of residence", "(^[a-zA-Z0-9._]).{2,}", "   Only the followings permitted (at least 2 char): a-z A-Z space.");
-//        String password = IO.readString("Password", "^[a-zA-Z0-9._]*", "   At least 6 lowercase characters.");
+        String password = IO.readString("Password", "(^[a-z]).{5,}", "   At least 6 characters.");
+        String fullName = IO.readString("Full name", "(^[a-zA-Z ]).{2,}", "   Only the followings permitted (at least 3 char): a-z A-Z space.");
+        String email = IO.readString("Email address", "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", "Invalid email format.");
+        String country = IO.readString("Country of residence", "(^[a-zA-Z0-9._]).{1,}", "   Only the followings permitted (at least 2 char): a-z A-Z space.");
+//        String password = IO.readString("Password", "(^[a-z]).{5,}", "   At least 6 lowercase characters.");
 //        String fullName = IO.readString("Full name", "(?=.*[a-zA-Z ]).{3,}", "   Only the followings permitted: a-z A-Z space");
 //        String email = IO.readString("Email address", "^[a-zA-Z0-9._]*", "");
 //        String country = IO.readString("Country of residence", "(?=.*[a-zA-Z0-9._]).{2,}", "   Only the followings permitted: a-z A-Z space");
@@ -164,9 +170,9 @@ class Menu {
 
     public void logIn() {
         System.out.println("\nPlease give your login details");
-        String userName = IO.readString("Username", "^[a-zA-Z0-9._]*", "    Only the followings permitted: a-z A-Z 0-9 ._");
+        String userName = IO.readString("Username", "^[a-zA-Z0-9._]*", "");
         if (dbay.isRegisteredUser(userName)) {
-            String password = IO.readString("Password", "(?=.*[a-z]).{6,}", "   At least 6 lowercase characters."); // "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}"
+            String password = IO.readString("Password", "^[a-zA-Z0-9_!#$%&'*+/=?]*", ""); // "(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}"
 
             try {
                 dbay.logIn(userName, password);
@@ -220,56 +226,44 @@ class Menu {
     }
 
     public void listNewCar() {
+        IO.printMessage("\n\n    *** Listing a car for sale ***");
+        IO.printMessage("\nPlease give the following details:");
+        String name = IO.readString("Name (or q to cancel)", "(^[a-zA-Z0-9._]).{1,}", "Only the followings permitted: a-z A-Z . space");
+        if (name.equals("q".toLowerCase())) {
+            return;
+        }
+        int yearOfManufacture = IO.readInteger("Manufacturing year", 1900, Calendar.getInstance().get(Calendar.YEAR));
+        double price = IO.readDouble("Price", 0, 10000000);
+        double engineSize = IO.readDouble("Engine size", 0, 15);
+        int numberOfDoors = IO.readInteger("Number of doors", 2, 10);
+        TypeOfCarBody typeOfCarBody = IO.chooseTypeOfCarBody();
+        boolean isManual = IO.chooseIsManual();
+
         try {
-            dbay.checkActiveUser();
-            IO.printMessage("\n\n    *** Listing a car for sale ***");
-            IO.printMessage("\nPlease give the following details:");
-            String name = IO.readString("Name (or q to cancel)", "^[a-zA-Z0-9. ]*", "Only the followings permitted: a-z A-Z . space");
-            if (name.equals("q".toLowerCase())) {
-                return;
-            }
-            int yearOfManufacture = IO.readInteger("Manufacturing year", 1900, Calendar.getInstance().get(Calendar.YEAR));
-            double price = IO.readDouble("Price", 0, 10000000);
-            double engineSize = IO.readDouble("Engine size", 0, 15);
-            int numberOfDoors = IO.readInteger("Number of doors", 2, 10);
-            TypeOfCarBody typeOfCarBody = IO.chooseTypeOfCarBody();
-            boolean isManual = IO.chooseIsManual();
-
-            try {
-                dbay.addCar(name, yearOfManufacture, price, engineSize, numberOfDoors, typeOfCarBody, isManual);
-                IO.printMessage("\n   " + name + " successfully added.");
-            } catch (AlreadyListedException e) {
-                System.err.println("\n   " + e.getMessage());
-            }
-
-        } catch (NotLoggedInException e) {
+            dbay.addCar(name, yearOfManufacture, price, engineSize, numberOfDoors, typeOfCarBody, isManual);
+            IO.printMessage("\n   " + name + " successfully added.");
+        } catch (DbayException e) {
             System.err.println("\n   " + e.getMessage());
         }
     }
 
     public void listNewMotorCycle() {
+        IO.printMessage("\n *** Listing a motorcycle for sale ***");
+        IO.printMessage("\nPlease give the following details:");
+        String name = IO.readString("Name (or q to cancel)", "(^[a-zA-Z0-9._]).{1,}", "Only the followings permitted: a-z A-Z . space");
+        if (name.equals("q".toLowerCase())) {
+            return;
+        }
+        int yearOfManufacture = IO.readInteger("Manufacturing year", 1900, Calendar.getInstance().get(Calendar.YEAR));
+        double price = IO.readDouble("Price", 0, 10000000);
+        double engineSize = IO.readDouble("Engine size", 0, 10);
+        TypeOfMotorCycle typeOfMotorCycle = IO.chooseTypeOfMotorCycle();
+        String listedBy = "Admin"; //activeUser.getUserName();
+
         try {
-            dbay.checkActiveUser();
-            IO.printMessage("\n *** Listing a motorcycle for sale ***");
-            IO.printMessage("\nPlease give the following details:");
-            String name = IO.readString("Name (or q to cancel)", "^[a-zA-Z0-9. ]*", "Only the followings permitted: a-z A-Z . space");
-            if (name.equals("q".toLowerCase())) {
-                return;
-            }
-            int yearOfManufacture = IO.readInteger("Manufacturing year", 1900, Calendar.getInstance().get(Calendar.YEAR));
-            double price = IO.readDouble("Price", 0, 10000000);
-            double engineSize = IO.readDouble("Engine size", 0, 10);
-            TypeOfMotorCycle typeOfMotorCycle = IO.chooseTypeOfMotorCycle();
-            String listedBy = "Admin"; //activeUser.getUserName();
-
-            try {
-                dbay.addMotorCycle(name, yearOfManufacture, price, engineSize, typeOfMotorCycle);
-                IO.printMessage("\n   " + name + " successfully added.");
-            } catch (AlreadyListedException e) {
-                System.err.println("\n   " + e.getMessage());
-            }
-
-        } catch (NotLoggedInException e) {
+            dbay.addMotorCycle(name, yearOfManufacture, price, engineSize, typeOfMotorCycle);
+            IO.printMessage("\n   " + name + " successfully added.");
+        } catch (DbayException e) {
             System.err.println("\n   " + e.getMessage());
         }
     }

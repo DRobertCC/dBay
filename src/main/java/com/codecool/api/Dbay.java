@@ -54,10 +54,10 @@ public abstract class Dbay {
 //        motorCycles = new ArrayList<>(XMLLoader.getMotorCycles("data/Dbay.xml"));
 //    }
 
-    public void serializeDatabase() {
+    public void serializeDatabase() { // Write the database to disk
         try {
             //Saving of object in a file
-            FileOutputStream file = new FileOutputStream(databasePath); //"data/Dbay.dat"
+            FileOutputStream file = new FileOutputStream(databasePath); //"src/main/resources/Dbay.dat"
             ObjectOutputStream out = new ObjectOutputStream(file);
 
             // Method for serialization of objects
@@ -76,7 +76,7 @@ public abstract class Dbay {
         }
     }
 
-    private void deSerializeDatabase() {
+    private void deSerializeDatabase() { // Read the database from disk
         try {
             // Reading the object from a file
             FileInputStream file = new FileInputStream(databasePath);

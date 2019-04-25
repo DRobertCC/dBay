@@ -15,9 +15,9 @@ class Menu {
     private static Dbay dbay; // Lehet statikus, hiszen csak egy lesz belőe per dbay. Így nem kell argumentumként átadni sem minden metódusnak.
 
     Menu() {
-        List<User> users = new ArrayList<>();
-        List<Item> items = new ArrayList<>();
-
+//        List<User> users = new ArrayList<>();
+//        List<Item> items = new ArrayList<>();
+//
 //        users.add(new User("Admin", "kecske", "John Hopkins", "iaia@mail.com", "Italy"));
 //        users.add(new User("Joe", "kecske", "Mekk Elek", "johny@mail.com", "UK"));
 //
@@ -25,9 +25,9 @@ class Menu {
 //        items.add(new Car(2, "Ford Mustang", 2000, 9999, 5, 2, TypeOfCarBody.valueOf("COUPE"), false, "Admin"));
 //        items.add(new MotorCycle(3, "Honda CBR", 1998, 5000, 1.2, TypeOfMotorCycle.valueOf("CRUISER"), "Admin"));
 //        int currentItemId = 3;
-//        dbay = new Dbay(users, items, currentItemId);
-//
-        dbay = new DbayCountry("data/Dbay.dat", "UK");
+//        dbay = new DbayCountry(users, items, currentItemId, "UK");
+
+        dbay = new DbayCountry("src/main/resources/Dbay.dat", "UK");
     }
 
     void handleMenu() {
@@ -42,7 +42,7 @@ class Menu {
                 "Show the items I already bought",
                 "Log out"};
 
-        printMenu("\n*** Welcome to dBay. The offline stuff marketplace. ***\n\n " + "           Main menu           Current user: " + dbay.getActiveUserName(), options, "Exit program");
+        printMenu("\n*** Welcome to dBay " + ((DbayCountry) dbay).getCountry() + ". The offline stuff marketplace. ***\n\n " + "           Main menu           Current user: " + dbay.getActiveUserName(), options, "Exit program");
     }
 
     public void printMenu(String title, String[] listOptions, String exitMessage) {
